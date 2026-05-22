@@ -5,9 +5,9 @@ Welcome to our project repo! This is where we’ll keep all the code, updates, d
 
 A few quick things:
 
-Write clear commit messages
-Create your own branch before making changes.
-Pull latest changes before pushing
-Keep the code organized and clean
-Ask questions or share ideas anytime
+* Write clear commit messages
+* Create your own branch before making changes.
+* Pull latest changes before pushing
+* Keep the code organized and clean
+* Ask questions or share ideas anytime
 Good luck to us!!
