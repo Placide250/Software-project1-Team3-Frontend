@@ -50,7 +50,7 @@ async function getIngredients() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
 }
 
@@ -67,7 +67,7 @@ async function addIngredient() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
   await getIngredients();
 }
@@ -84,7 +84,7 @@ async function updateIngredient() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
   await getIngredients();
 }

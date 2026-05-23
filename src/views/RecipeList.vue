@@ -36,7 +36,7 @@ async function getRecipes() {
         console.log(error);
         snackbar.value.value = true;
         snackbar.value.color = "error";
-        snackbar.value.text = error.response.data.message;
+        snackbar.value.text = error.message;
       });
   } else {
     await RecipeServices.getRecipes()
@@ -47,7 +47,7 @@ async function getRecipes() {
         console.log(error);
         snackbar.value.value = true;
         snackbar.value.color = "error";
-        snackbar.value.text = error.response.data.message;
+        snackbar.value.text = error.message;
       });
   }
 }
@@ -65,7 +65,7 @@ async function addRecipe() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
   await getRecipes();
 }
