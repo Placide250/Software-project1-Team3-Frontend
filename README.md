@@ -7,7 +7,7 @@ Please visit https://github.com/Placide250/Software-project1-Team3-backend for t
 1. Clone the project into your **XAMPP/xamppfiles/htdocs/planetarium-frontend** directory.
 
 ```
-git clone https://github.com/Placide250/Software-project1-Team3-backend.git
+git clone https://github.com/Placide250/Software-project1-Team3-Frontend.git
 ```
 
 2. Install the project.
