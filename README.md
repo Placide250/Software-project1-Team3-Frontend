@@ -1,13 +1,13 @@
-# Recipe Frontend with Vue 3
+# Planetarium Frontend with Vue 3
 
-This application allows users to create and maintain recipes. Please visit https://github.com/mattmiller64/recipe-backend for the backend repository.
+Please visit https://github.com/Placide250/Software-project1-Team3-backend for the backend repository.
 
 ## Project Setup
 
-1. Clone the project into your **XAMPP/xamppfiles/htdocs/recipeapp** directory.
+1. Clone the project into your **XAMPP/xamppfiles/htdocs/planetarium-frontend** directory.
 
 ```
-git clone https://github.com/mattmiller64/recipe-frontend.git
+git clone https://github.com/Placide250/Software-project1-Team3-backend.git
 ```
 
 2. Install the project.
@@ -17,7 +17,6 @@ npm install
 ```
 
 3. Make sure **Apache** is running.
-
    - We recommend using XAMPP to serve this project.
    - In XAMPP, make sure that **Apache** is running.
 
