@@ -41,7 +41,7 @@ async function createAccount() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
 }
 
@@ -58,7 +58,7 @@ async function login() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
 }
 

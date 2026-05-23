@@ -65,7 +65,7 @@ async function updateRecipe() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
   await getRecipe();
 }
@@ -79,7 +79,7 @@ async function getIngredients() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
 }
 
@@ -108,7 +108,7 @@ async function addIngredient() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
   await getRecipeIngredients();
 }
@@ -129,7 +129,7 @@ async function updateIngredient() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
   await getRecipeIngredients();
 }
@@ -145,7 +145,7 @@ async function deleteIngredient(ingredient) {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
   await getRecipeIngredients();
 }
@@ -166,7 +166,7 @@ async function checkUpdateIngredient() {
 
 async function getRecipeSteps() {
   await RecipeStepServices.getRecipeStepsForRecipeWithIngredients(
-    route.params.id
+    route.params.id,
   )
     .then((response) => {
       recipeSteps.value = response.data;
@@ -191,7 +191,7 @@ async function addStep() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
 
   await checkUpdateIngredient();
@@ -211,7 +211,7 @@ async function updateStep() {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
 
   await checkUpdateIngredient();
@@ -230,7 +230,7 @@ async function deleteStep(step) {
       console.log(error);
       snackbar.value.value = true;
       snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value.text = error.message;
     });
 
   await getRecipeSteps();
@@ -458,8 +458,8 @@ function closeSnackBar() {
           isAddIngredient
             ? "Add Ingredient"
             : isEditIngredient
-            ? "Edit Ingredient"
-            : ""
+              ? "Edit Ingredient"
+              : ""
         }}</v-card-title>
         <v-card-text>
           <v-row>
@@ -506,8 +506,8 @@ function closeSnackBar() {
               isAddIngredient
                 ? closeAddIngredient()
                 : isEditIngredient
-                ? closeEditIngredient()
-                : false
+                  ? closeEditIngredient()
+                  : false
             "
             >Close</v-btn
           >
@@ -518,15 +518,15 @@ function closeSnackBar() {
               isAddIngredient
                 ? addIngredient()
                 : isEditIngredient
-                ? updateIngredient()
-                : false
+                  ? updateIngredient()
+                  : false
             "
             >{{
               isAddIngredient
                 ? "Add Ingredient"
                 : isEditIngredient
-                ? "Update Ingredient"
-                : ""
+                  ? "Update Ingredient"
+                  : ""
             }}</v-btn
           >
         </v-card-actions>
