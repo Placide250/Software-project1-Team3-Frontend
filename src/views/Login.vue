@@ -25,8 +25,8 @@ onMounted(async () => {
   // }
 });
 
-function navigateToRecipes() {
-  router.push({ name: "recipes" });
+function navigateToEvents() {
+  router.push({ name: "events" });
 }
 
 async function createAccount() {
@@ -90,6 +90,7 @@ function closeSnackBar() {
           <v-text-field
             v-model="user.password"
             label="Password"
+            type="password"
             required
           ></v-text-field>
         </v-card-text>
@@ -109,7 +110,7 @@ function closeSnackBar() {
             class="ml-2"
             variant="flat"
             color="secondary"
-            @click="navigateToRecipes()"
+            @click="navigateToEvents()"
           >
             Browse Events
           </v-btn>
