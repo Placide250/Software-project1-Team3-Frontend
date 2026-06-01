@@ -31,6 +31,14 @@ async function getEvents() {
     });
 }
 
+function openAdd() {
+  isAdd.value = true;
+}
+
+function closeAdd() {
+  isAdd.value = false;
+}
+
 function closeSnackBar() {
   snackbar.value.value = false;
 }
