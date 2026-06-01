@@ -32,7 +32,7 @@ function logout() {
 <template>
   <div>
     <v-app-bar color="primary" app dark>
-      <router-link :to="{ name: 'recipes' }">
+      <router-link :to="{ name: 'events' }">
         <v-img
           class="mx-2"
           :src="logoURL"
