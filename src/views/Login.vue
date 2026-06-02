@@ -5,7 +5,7 @@ import { useRouter } from "vue-router";
 import UserServices from "../services/UserServices.js";
 
 const router = useRouter();
-const isCreateAccount = ref(false);
+//const isCreateAccount = ref(false);
 const snackbar = ref({
   value: false,
   color: "",
@@ -29,21 +29,7 @@ function navigateToRecipes() {
   router.push({ name: "recipes" });
 }
 
-async function createAccount() {
-  await UserServices.addUser(user.value)
-    .then(() => {
-      snackbar.value.value = true;
-      snackbar.value.color = "green";
-      snackbar.value.text = "Account created successfully!";
-      router.push({ name: "login" });
-    })
-    .catch((error) => {
-      console.log(error);
-      snackbar.value.value = true;
-      snackbar.value.color = "error";
-      snackbar.value.text = error.message;
-    });
-}
+
 
 async function login() {
   await UserServices.loginUser(user)
@@ -63,12 +49,9 @@ async function login() {
 }
 
 function openCreateAccount() {
-  isCreateAccount.value = true;
+  router.push({ name: "register" });
 }
 
-function closeCreateAccount() {
-  isCreateAccount.value = false;
-}
 
 function closeSnackBar() {
   snackbar.value.value = false;
@@ -90,6 +73,7 @@ function closeSnackBar() {
           <v-text-field
             v-model="user.password"
             label="Password"
+            type="password"
             required
           ></v-text-field>
         </v-card-text>
@@ -116,48 +100,7 @@ function closeSnackBar() {
         </v-card-title>
       </v-card>
 
-      <v-dialog persistent v-model="isCreateAccount" width="800">
-        <v-card class="rounded-lg elevation-5">
-          <v-card-title class="headline mb-2">Create Account </v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="user.firstName"
-              label="First Name"
-              required
-            ></v-text-field>
-
-            <v-text-field
-              v-model="user.lastName"
-              label="Last Name"
-              required
-            ></v-text-field>
-
-            <v-text-field
-              v-model="user.email"
-              label="Email"
-              required
-            ></v-text-field>
-
-            <v-text-field
-              v-model="user.password"
-              label="Password"
-              required
-            ></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              variant="flat"
-              color="secondary"
-              @click="closeCreateAccount()"
-              >Close</v-btn
-            >
-            <v-btn variant="flat" color="primary" @click="createAccount()"
-              >Create Account</v-btn
-            >
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      
 
       <v-snackbar v-model="snackbar.value" rounded="pill">
         {{ snackbar.text }}
