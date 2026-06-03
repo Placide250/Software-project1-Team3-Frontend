@@ -1,10 +1,11 @@
 <script setup>
-import { onMounted } from "vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import RecipeCard from "../components/RecipeCardComponent.vue";
 import RecipeServices from "../services/RecipeServices.js";
 
 const recipes = ref([]);
+const router = useRouter();
 const isAdd = ref(false);
 const user = ref(null);
 const snackbar = ref({
@@ -98,13 +99,23 @@ function closeSnackBar() {
           >
         </v-col>
       </v-row>
-
-      <RecipeCard
-        v-for="recipe in recipes"
-        :key="recipe.id"
-        :recipe="recipe"
-        @deletedList="getLists()"
-      />
+<v-card
+  v-for="event in recipes"
+  :key="event.id"
+  class="rounded-lg elevation-5 mb-4"
+>
+  <RecipeCard :recipe="event" @deletedList="getRecipes()" />
+  <v-card-actions>
+    <v-spacer></v-spacer>
+    <v-btn
+      variant="flat"
+      color="primary"
+      @click="router.push({ name: 'waitlist', params: { eventId: event.id } })"
+    >
+      Join Waitlist
+    </v-btn>
+  </v-card-actions>
+</v-card>
 
       <v-dialog persistent v-model="isAdd" width="800">
         <v-card class="rounded-lg elevation-5">

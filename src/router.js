@@ -24,6 +24,12 @@ const router = createRouter({
       name: "ingredients",
       component: () => import("./views/IngredientList.vue"),
     },
+{
+  path: "/waitlist/:eventId",
+  name: "waitlist",
+  props: true,
+  component: () => import("./views/Waitlist.vue"),
+},
   ],
 });
 
