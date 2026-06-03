@@ -92,14 +92,9 @@ function goBack() {
         </v-col>
       </v-row>
 
-      <v-alert
-        type="warning"
-        variant="tonal"
-        class="mb-6"
-        icon="mdi-ticket-off"
-      >
-        This event is currently <strong>sold out</strong>. Join the waitlist and we will notify you if a spot opens up.
-      </v-alert>
+    <p class="mb-6 text-body-1">
+  This event is currently <strong>sold out</strong>. Join the waitlist and we will notify you if a spot opens up.
+</p>
 
       <!-- Success state after submission -->
       <v-card v-if="isSubmitted" class="rounded-lg elevation-5">
@@ -115,7 +110,7 @@ function goBack() {
         </v-card-text>
       </v-card>
 
-      
+      <!-- Registration Form -->
       <v-card v-else class="rounded-lg elevation-5">
         <v-card-title class="headline mb-2">Your Information</v-card-title>
         <v-card-text>
