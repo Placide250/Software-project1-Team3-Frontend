@@ -25,7 +25,7 @@ onMounted(async () => {
   // }
 });
 
-function navigateToRecipes() {
+function navigateToEvents() {
   router.push({ name: "events" });
 }
 
@@ -93,7 +93,7 @@ function closeSnackBar() {
             class="ml-2"
             variant="flat"
             color="secondary"
-            @click="navigateToRecipes()"
+            @click="navigateToEvents()"
           >
             Browse Events
           </v-btn>

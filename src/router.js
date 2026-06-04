@@ -20,9 +20,8 @@ const router = createRouter({
     },
     {
       path: "/events/:id",
-      name: "editEvent",
-      props: true,
-      component: () => import("./views/EditEvent.vue"),
+      name: "eventDetails",
+      component: () => import("./views/EventDetails.vue"),
     },
     {
       path: "/ingredients",
