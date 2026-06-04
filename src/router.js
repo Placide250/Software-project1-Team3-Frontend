@@ -19,22 +19,17 @@ const router = createRouter({
       component: () => import("./views/RecipeList.vue"),
     },
     {
-      path: "/events",
-      name: "events",
-      component: () => import("./views/EventList.vue"),
-    },
-    {
-      path: "/events/:id",
-      name: "editEvent",
+      path: "/recipe/:id",
+      name: "editRecipe",
       props: true,
-      component: () => import("./views/EditEvent.vue"),
+      component: () => import("./views/EditRecipe.vue"),
     },
     {
       path: "/ingredients",
       name: "ingredients",
       component: () => import("./views/IngredientList.vue"),
     },
-  ]
+  ],
 });
 
 export default router;
