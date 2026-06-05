@@ -44,13 +44,11 @@ function logout() {
       <v-toolbar-title class="title">
         {{ title }}
       </v-toolbar-title>
+      <v-btn class="mx-2" :to="{ name: 'adminEvents' }"> Admin Events </v-btn>
       <v-spacer></v-spacer>
       <v-btn class="mx-2" :to="{ name: 'events' }"> Events </v-btn>
       <v-btn v-if="user === null" class="mx-2" :to="{ name: 'login' }">
         Login
-      </v-btn>
-      <v-btn v-if="user !== null" class="mx-2" :to="{ name: 'ingredients' }">
-        Ingredients
       </v-btn>
       <v-menu v-if="user !== null" min-width="200px" rounded>
         <template v-slot:activator="{ props }">

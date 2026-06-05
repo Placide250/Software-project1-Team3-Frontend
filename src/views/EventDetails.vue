@@ -70,7 +70,6 @@ function closeSnackBar() {
         <tr>
           <th class="text-left">Date</th>
           <th class="text-left">Time</th>
-          <th class="text-left">Seats Available</th>
           <th class="text-left">Tickets</th>
         </tr>
       </thead>
@@ -82,7 +81,6 @@ function closeSnackBar() {
           <td>
             {{ formatShowingTime(slot.datetime) }}
           </td>
-          <td>{{ slot.seatsAvailable }}</td>
           <td>
             <v-btn color="primary" @click="buyTicket(slot)">
               <v-icon start icon="mdi-ticket"></v-icon>

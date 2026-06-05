@@ -18,6 +18,7 @@ const user = ref({
   email: "",
   password: "",
   confirmPassword: "",
+  isAdmin: false,
 });
 
 async function createAccount() {
@@ -63,7 +64,7 @@ async function createAccount() {
         lastName: user.value.lastName,
         email: user.value.email,
         password: user.value.password,
-        isAdmin: false
+        isAdmin: user.value.isAdmin
     });
     snackbar.value.value = true;
     snackbar.value.color = "green";
@@ -121,6 +122,11 @@ function goToLogin() {
           type="password"
           required
         ></v-text-field>
+
+        <v-checkbox
+          v-model="user.isAdmin"
+          label="Admin Account"
+        ></v-checkbox>
       </v-card-text>
 
       <v-card-actions>
