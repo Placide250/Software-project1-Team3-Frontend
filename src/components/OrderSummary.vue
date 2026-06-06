@@ -61,7 +61,7 @@ function openPreviewSeatmap() {
         </v-chip>
         <v-chip class="ma-2" color="primary" label>
           <v-icon start icon="mdi-cash-multiple"></v-icon>
-          {{ formatPrice(timeSlot.event?.price) }} /ticket
+          {{ formatPrice(timeSlot.event?.price) }}
         </v-chip>
       </div>
 
