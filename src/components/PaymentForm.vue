@@ -5,10 +5,10 @@ const emit = defineEmits(["checkout"]);
 
 const selectedPaymentMethod = ref(null);
 const paymentMethods = [
-  { key: "credit-card", label: "Credit Card", icon: "mdi-credit-card-outline" },
+  { key: "credit_card", label: "Credit Card", icon: "mdi-credit-card-outline" },
   { key: "paypal", label: "Paypal", icon: "mdi-alpha-p-box-outline" },
-  { key: "apple-pay", label: "Apple Pay", icon: "mdi-apple" },
-  { key: "google-pay", label: "Google Pay", icon: "mdi-google" },
+  { key: "apple_pay", label: "Apple Pay", icon: "mdi-apple" },
+  { key: "google_pay", label: "Google Pay", icon: "mdi-google" },
 ];
 const cardName = ref("");
 const cardNumber = ref("");
