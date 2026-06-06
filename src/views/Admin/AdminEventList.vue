@@ -53,6 +53,12 @@ function closeSnackBar() {
             >Admin - Events
           </v-card-title>
         </v-col>
+        <v-col class="d-flex justify-end" cols="2">
+          <v-btn color="accent" class="me-2" :to="{ name: 'adminCreateEvent' }">
+            <v-icon start icon="mdi-plus"></v-icon>
+            New Event</v-btn
+          >
+        </v-col>
       </v-row>
 
       <EventCard
