@@ -24,6 +24,11 @@ const router = createRouter({
       component: () => import("./views/EventDetails.vue"),
     },
     {
+      path: "/events/:eventId/time-slots/:slotId",
+      name: "timeSlotDetails",
+      component: () => import("./views/TimeSlotDetails.vue"),
+    },
+    {
       path: "/admin/events",
       name: "adminEvents",
       component: () => import("./views/Admin/AdminEventList.vue"),

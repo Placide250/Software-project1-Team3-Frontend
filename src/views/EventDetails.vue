@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import EventServices from "../services/EventServices.js";
 import formatPrice from "../utils/formatPrice.js";
 import {
@@ -9,6 +9,7 @@ import {
 } from "../utils/formatDatesAndTimes.js";
 
 const route = useRoute();
+const router = useRouter();
 const eventId = route.params.id;
 const event = ref({});
 const snackbar = ref({
@@ -32,12 +33,10 @@ async function getEvent() {
 }
 
 function buyTicket(slot) {
-  // TODO: implement this guy
-  snackbar.value = {
-    value: true,
-    color: "success",
-    text: `TODO: IMPLEMENT THIS`,
-  };
+  router.push({
+    name: "timeSlotDetails",
+    params: { eventId: eventId, slotId: slot.id },
+  });
 }
 
 function closeSnackBar() {
