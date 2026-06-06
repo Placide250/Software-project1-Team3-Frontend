@@ -8,7 +8,7 @@ export default {
     return apiClient.get("events/" + id);
   },
   addEvent(event) {
-    return apiClient.post("events", recipe);
+    return apiClient.post("events", event);
   },
   updateEvent(eventId, event) {
     return apiClient.put("events/" + eventId, event);
