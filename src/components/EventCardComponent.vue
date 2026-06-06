@@ -10,6 +10,10 @@ const props = defineProps({
   event: {
     required: true,
   },
+  isAdmin: {
+    required: false,
+    default: false,
+  },
 });
 
 onMounted(async () => {
@@ -17,7 +21,11 @@ onMounted(async () => {
 });
 
 function navigateToEventDetails() {
-  router.push({ name: "eventDetails", params: { id: props.event.id } });
+  if (!props.isAdmin) {
+    router.push({ name: "eventDetails", params: { id: props.event.id } });
+  } else {
+    router.push({ name: "adminEditEvent", params: { id: props.event.id } });
+  }
 }
 </script>
 
