@@ -1,6 +1,8 @@
 <script setup>
 import { computed, ref, onMounted } from "vue";
 import formatPrice from "../utils/formatPrice.js";
+import { formatShowingDateTime } from "../utils/formatDatesAndTimes.js";
+import Seatmap from "./Seatmap.vue";
 
 const props = defineProps({
   selectedSeats: { type: Array, required: true },
@@ -13,6 +15,7 @@ const props = defineProps({
 const emit = defineEmits(["update:childCount", "update:guestEmail"]);
 
 const user = ref(null);
+const previewSeatmapOpen = ref(false);
 const ticketCount = computed(() => props.selectedSeats.length);
 const estimatedTotal = computed(() => {
   const price = props.timeSlot.event?.price ?? 0;
@@ -34,15 +37,36 @@ const EMAIL_RULES = [
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
 });
+
+function openPreviewSeatmap() {
+  previewSeatmapOpen.value = true;
+}
 </script>
 
 <template>
-  <v-card class="rounded-lg elevation-5 mt-8">
+  <v-card class="rounded-lg elevation-5">
     <v-card-title class="text-h6 font-weight-bold pa-4 pb-2"
       >Order Summary</v-card-title
     >
     <v-divider></v-divider>
     <v-card-text class="pa-4">
+      <p class="text-subtitle-2 font-weight-bold mb-2">
+        {{ timeSlot.event?.name }}
+      </p>
+      <p class="text-body-1 mb-2">{{ timeSlot?.event?.description }}</p>
+      <div class="d-flex mt-2">
+        <v-chip class="ma-2" color="accent" label>
+          <v-icon start icon="mdi-calendar-range"></v-icon>
+          {{ formatShowingDateTime(timeSlot.datetime) }}
+        </v-chip>
+        <v-chip class="ma-2" color="primary" label>
+          <v-icon start icon="mdi-cash-multiple"></v-icon>
+          {{ formatPrice(timeSlot.event?.price) }} /ticket
+        </v-chip>
+      </div>
+
+      <v-divider class="my-4"></v-divider>
+
       <p class="text-subtitle-2 font-weight-bold mb-2">Selected Seats</p>
       <div
         v-if="selectedSeats.length === 0"
@@ -51,21 +75,36 @@ onMounted(async () => {
         No seats selected. Choose seats from the map above.
       </div>
       <div v-else class="mb-4">
-        <v-chip
-          v-for="seat in selectedSeats"
-          :key="seat.seat"
-          :color="seat.isWheelchair ? 'blue' : 'green'"
-          variant="elevated"
-          label
-          class="ma-1"
-        >
-          <v-icon
-            v-if="seat.isWheelchair"
-            start
-            icon="mdi-wheelchair-accessibility"
-          ></v-icon>
-          {{ seat.seat }}
-        </v-chip>
+        <v-row>
+          <v-col :cols="readOnly ? 8 : 12">
+            <v-chip
+              v-for="seat in selectedSeats"
+              :key="seat.seat"
+              :color="seat.isWheelchair ? 'blue' : 'green'"
+              variant="elevated"
+              label
+              class="ma-1"
+            >
+              <v-icon
+                v-if="seat.isWheelchair"
+                start
+                icon="mdi-wheelchair-accessibility"
+              ></v-icon>
+              {{ seat.seat }}
+            </v-chip>
+          </v-col>
+          <v-col v-if="readOnly" :cols="4" class="d-flex justify-end">
+            <v-btn color="secondary" @click="openPreviewSeatmap()">
+              <v-icon start icon="mdi-grid-large"></v-icon>
+              Seatmap
+            </v-btn>
+            <seatmap
+              preview-only
+              v-model:is-open="previewSeatmapOpen"
+              :selected-seats="selectedSeats"
+            />
+          </v-col>
+        </v-row>
       </div>
 
       <v-row align="center" class="mb-2">
@@ -114,14 +153,16 @@ onMounted(async () => {
 
       <v-divider class="my-4"></v-divider>
 
-      <div v-if="user">
-        <p class="text-subtitle-2 font-weight-bold mb-1">Account</p>
+      <div v-if="user || (readOnly && guestEmail != '')">
+        <p class="text-subtitle-2 font-weight-bold mb-1">
+          {{ user ? "Account" : "Guest Email" }}
+        </p>
         <v-chip
           prepend-icon="mdi-account-circle"
           variant="tonal"
           color="primary"
         >
-          {{ user.email }}
+          {{ user ? user.email : guestEmail }}
         </v-chip>
       </div>
       <v-alert v-else type="info" variant="tonal" class="mt-2">
@@ -140,20 +181,30 @@ onMounted(async () => {
       </v-alert>
     </v-card-text>
     <v-card-actions class="pa-4 pt-0">
+      <v-spacer></v-spacer>
       <v-btn
         v-if="readOnly"
         variant="flat"
         color="secondary"
         :to="{
           name: 'timeSlotDetails',
-          params: { eventId: timeSlot.event.id, slotId: timeSlot.id },
+          params: { eventId: timeSlot.event?.id, slotId: timeSlot.id },
+          query: {
+            data: JSON.stringify({
+              selectedSeats,
+              childCount,
+              guestEmail,
+              ticketCount,
+              estimatedTotal,
+            }),
+          },
         }"
       >
+        <v-icon start icon="mdi-pencil"></v-icon>
         Edit Order
       </v-btn>
-      <v-spacer></v-spacer>
       <v-btn
-        v-if="!readOnly"
+        v-else
         variant="flat"
         color="primary"
         size="large"
@@ -163,7 +214,13 @@ onMounted(async () => {
           name: 'timeSlotCheckout',
           params: { eventId: timeSlot?.event?.id, slotId: timeSlot.id },
           query: {
-            data: JSON.stringify({ selectedSeats, childCount, guestEmail }),
+            data: JSON.stringify({
+              selectedSeats,
+              childCount,
+              guestEmail,
+              ticketCount,
+              estimatedTotal,
+            }),
           },
         }"
       >

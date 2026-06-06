@@ -101,6 +101,8 @@ function closeSnackBar() {
 
     <seatmap :selected-seats="selectedSeats" @select-seat="selectSeat" />
 
+    <v-divider class="my-4"></v-divider>
+
     <order-summary
       v-model:child-count="childCount"
       v-model:guest-email="guestEmail"

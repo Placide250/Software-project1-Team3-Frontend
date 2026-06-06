@@ -4,9 +4,11 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  previewOnly: { type: Boolean, default: false },
+  isOpen: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["select-seat"]);
+const emit = defineEmits(["select-seat", "update:isOpen"]);
 
 function seatId(row, seat) {
   return `${row}${seat}`;
@@ -45,7 +47,76 @@ const SEATS = [
 </script>
 
 <template>
-  <v-card class="rounded-lg elevation-5">
+  <v-dialog
+    v-if="previewOnly"
+    :model-value="isOpen"
+    max-width="1000"
+    @update:model-value="emit('update:isOpen', $event)"
+  >
+    <v-card class="rounded-lg elevation-5">
+      <v-card-title class="headline text-center">Front</v-card-title>
+      <v-divider></v-divider>
+      <v-card-text class="body-1">
+        <div
+          v-for="row in SEATS"
+          :key="row.row"
+          class="d-flex justify-center align-center"
+        >
+          <div v-if="row.leftWheelchair">
+            <v-chip
+              color="blue"
+              :variant="isSelected(row.row, 0) ? 'elevated' : 'outlined'"
+              label
+              style="width: 50px; cursor: pointer"
+              class="ma-1 d-flex justify-center align-center"
+            >
+              <v-icon start icon="mdi-wheelchair-accessibility"></v-icon>
+              0
+            </v-chip>
+          </div>
+          <div v-for="seat in row.seats" :key="seat">
+            <v-chip
+              color="green"
+              :variant="isSelected(row.row, seat) ? 'elevated' : 'outlined'"
+              label
+              style="width: 45px; cursor: pointer"
+              class="ma-1 d-flex justify-center align-center"
+            >
+              {{ seatId(row.row, seat) }}
+            </v-chip>
+          </div>
+          <div v-if="row.rightWheelchair">
+            <v-chip
+              color="blue"
+              :variant="
+                isSelected(row.row, row.seats.length + 1)
+                  ? 'elevated'
+                  : 'outlined'
+              "
+              label
+              style="width: 50px; cursor: pointer"
+              class="ma-1 d-flex justify-center align-center"
+            >
+              <v-icon start icon="mdi-wheelchair-accessibility"></v-icon>
+              {{ row.seats.length + 1 }}
+            </v-chip>
+          </div>
+        </div>
+      </v-card-text>
+      <v-card-actions class="pa-4 pt-0">
+        <v-spacer></v-spacer>
+        <v-btn
+          variant="flat"
+          color="secondary"
+          @click="emit('update:isOpen', false)"
+        >
+          Close
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-card v-else class="rounded-lg elevation-5">
     <v-card-title class="headline text-center">Front</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="body-1">
