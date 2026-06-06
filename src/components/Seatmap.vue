@@ -4,6 +4,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  reservedTickets: {
+    type: Array,
+    default: () => [],
+  },
   previewOnly: { type: Boolean, default: false },
   isOpen: { type: Boolean, default: false },
 });
@@ -14,12 +18,18 @@ function seatId(row, seat) {
   return `${row}${seat}`;
 }
 
+function isReserved(row, seat) {
+  return props.reservedTickets.some((s) => s.seat === seatId(row, seat));
+}
+
 function isSelected(row, seat) {
   return props.selectedSeats.some((s) => s.seat === seatId(row, seat));
 }
 
 function handleSeatClick(row, seat, isWheelchair) {
-  emit("select-seat", seatId(row, seat), isWheelchair);
+  if (!isReserved(row, seat)) {
+    emit("select-seat", seatId(row, seat), isWheelchair);
+  }
 }
 
 /*
@@ -64,8 +74,14 @@ const SEATS = [
         >
           <div v-if="row.leftWheelchair">
             <v-chip
-              color="blue"
-              :variant="isSelected(row.row, 0) ? 'elevated' : 'outlined'"
+              :color="isReserved(row.row, 0) ? 'gray' : 'blue'"
+              :variant="
+                isSelected(row.row, 0)
+                  ? 'elevated'
+                  : isReserved(row.row, 0)
+                    ? 'plain'
+                    : 'outlined'
+              "
               label
               style="width: 60px; cursor: pointer"
               class="ma-1 d-flex justify-center align-center"
@@ -76,8 +92,14 @@ const SEATS = [
           </div>
           <div v-for="seat in row.seats" :key="seat">
             <v-chip
-              color="green"
-              :variant="isSelected(row.row, seat) ? 'elevated' : 'outlined'"
+              :color="isReserved(row.row, seat) ? 'gray' : 'green'"
+              :variant="
+                isSelected(row.row, seat)
+                  ? 'elevated'
+                  : isReserved(row.row, seat)
+                    ? 'plain'
+                    : 'outlined'
+              "
               label
               style="width: 45px; cursor: pointer"
               class="ma-1 d-flex justify-center align-center"
@@ -87,11 +109,15 @@ const SEATS = [
           </div>
           <div v-if="row.rightWheelchair">
             <v-chip
-              color="blue"
+              :color="
+                isReserved(row.row, row.seats.length + 1) ? 'gray' : 'blue'
+              "
               :variant="
                 isSelected(row.row, row.seats.length + 1)
                   ? 'elevated'
-                  : 'outlined'
+                  : isReserved(row.row, row.seats.length + 1)
+                    ? 'plain'
+                    : 'outlined'
               "
               label
               style="width: 60px; cursor: pointer"
@@ -127,8 +153,14 @@ const SEATS = [
       >
         <div v-if="row.leftWheelchair">
           <v-chip
-            color="blue"
-            :variant="isSelected(row.row, 0) ? 'elevated' : 'outlined'"
+            :color="isReserved(row.row, 0) ? 'gray' : 'blue'"
+            :variant="
+              isSelected(row.row, 0)
+                ? 'elevated'
+                : isReserved(row.row, 0)
+                  ? 'plain'
+                  : 'outlined'
+            "
             label
             style="width: 60px; cursor: pointer"
             class="ma-1 d-flex justify-center align-center"
@@ -140,8 +172,14 @@ const SEATS = [
         </div>
         <div v-for="seat in row.seats" :key="seat">
           <v-chip
-            color="green"
-            :variant="isSelected(row.row, seat) ? 'elevated' : 'outlined'"
+            :color="isReserved(row.row, seat) ? 'gray' : 'green'"
+            :variant="
+              isSelected(row.row, seat)
+                ? 'elevated'
+                : isReserved(row.row, seat)
+                  ? 'plain'
+                  : 'outlined'
+            "
             label
             style="width: 45px; cursor: pointer"
             class="ma-1 d-flex justify-center align-center"
@@ -152,11 +190,13 @@ const SEATS = [
         </div>
         <div v-if="row.rightWheelchair">
           <v-chip
-            color="blue"
+            :color="isReserved(row.row, row.seats.length + 1) ? 'gray' : 'blue'"
             :variant="
               isSelected(row.row, row.seats.length + 1)
                 ? 'elevated'
-                : 'outlined'
+                : isReserved(row.row, row.seats.length + 1)
+                  ? 'plain'
+                  : 'outlined'
             "
             label
             style="width: 60px; cursor: pointer"

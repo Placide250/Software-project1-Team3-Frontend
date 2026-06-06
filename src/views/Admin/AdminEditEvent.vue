@@ -51,6 +51,24 @@ const TIME_OPTIONS = [
   "11:00 PM",
 ];
 
+const standardSeatsLeft = (slot) => {
+  const STARTING_STANDARD_TICKETS = 75;
+  if (!slot?.tickets) return STARTING_STANDARD_TICKETS;
+  return (
+    STARTING_STANDARD_TICKETS -
+    slot?.tickets.filter((t) => !t.isWheelchair).length
+  );
+};
+
+const wheelchairSeatsLeft = (slot) => {
+  const STARTING_WHEELCHAIR_TICKETS = 2;
+  if (!slot?.tickets) return STARTING_WHEELCHAIR_TICKETS;
+  return (
+    STARTING_WHEELCHAIR_TICKETS -
+    slot?.tickets.filter((t) => t.isWheelchair).length
+  );
+};
+
 const snackbar = ref({
   value: false,
   color: "",
@@ -300,6 +318,8 @@ function closeSnackBar() {
                 <tr>
                   <th class="text-left">Date</th>
                   <th class="text-left">Time</th>
+                  <th class="text-left">Standard Seats Left</th>
+                  <th class="text-left">Wheelchair Seats Left</th>
                   <th class="text-left justify-end d-flex">Actions</th>
                 </tr>
               </thead>
@@ -311,6 +331,8 @@ function closeSnackBar() {
                   <td>
                     {{ formatShowingTime(slot.datetime) }}
                   </td>
+                  <td>{{ standardSeatsLeft(slot) }}</td>
+                  <td>{{ wheelchairSeatsLeft(slot) }}</td>
                   <td class="justify-end d-flex align-center">
                     <v-btn color="primary" @click="openEditTimeSlot(slot)">
                       <v-icon start icon="mdi-pencil"></v-icon>

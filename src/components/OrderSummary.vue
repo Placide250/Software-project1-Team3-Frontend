@@ -100,6 +100,7 @@ function openPreviewSeatmap() {
             </v-btn>
             <seatmap
               preview-only
+              :reserved-tickets="timeSlot.tickets"
               v-model:is-open="previewSeatmapOpen"
               :selected-seats="selectedSeats"
             />

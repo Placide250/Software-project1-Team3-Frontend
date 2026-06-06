@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watchEffect } from "vue";
+import { onMounted, ref, watchEffect, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Seatmap from "../components/Seatmap.vue";
 import OrderSummary from "../components/OrderSummary.vue";
@@ -31,6 +31,24 @@ watchEffect(() => {
       }),
     },
   });
+});
+
+const standardSeatsLeft = computed(() => {
+  const STARTING_STANDARD_TICKETS = 75;
+  if (!timeSlot?.value?.tickets) return STARTING_STANDARD_TICKETS;
+  return (
+    STARTING_STANDARD_TICKETS -
+    timeSlot?.value?.tickets.filter((t) => !t.isWheelchair).length
+  );
+});
+
+const wheelchairSeatsLeft = computed(() => {
+  const STARTING_WHEELCHAIR_TICKETS = 2;
+  if (!timeSlot?.value?.tickets) return STARTING_WHEELCHAIR_TICKETS;
+  return (
+    STARTING_WHEELCHAIR_TICKETS -
+    timeSlot?.value?.tickets.filter((t) => t.isWheelchair).length
+  );
 });
 
 const snackbar = ref({
@@ -70,36 +88,48 @@ function closeSnackBar() {
 </script>
 <template>
   <v-container>
-    <v-btn
-      variant="flat"
-      color="secondary"
-      :to="{ name: 'eventDetails', params: { id: eventId } }"
-      class="my-4"
-    >
-      <v-icon start icon="mdi-arrow-left"></v-icon>
-      Back to Event
-    </v-btn>
-
-    <v-row align="center" class="mb-4">
-      <v-col cols="8">
-        <v-card-title class="pl-0 text-h4 font-weight-bold">{{
-          timeSlot.event?.name
-        }}</v-card-title>
-        <p class="text-body-1">{{ timeSlot.event?.description }}</p>
-      </v-col>
-      <v-col class="d-flex justify-end" cols="4">
-        <v-chip class="ma-2" color="accent" label>
-          <v-icon start icon="mdi-calendar-range"></v-icon>
-          {{ formatShowingDateTime(timeSlot.datetime) }}
-        </v-chip>
-        <v-chip class="ma-2" color="primary" label>
-          <v-icon start icon="mdi-cash-multiple"></v-icon>
-          {{ formatPrice(timeSlot.event?.price) }}
-        </v-chip>
-      </v-col>
+    <v-row class="d-flex justify-end">
+      <v-btn
+        variant="flat"
+        color="secondary"
+        :to="{ name: 'eventDetails', params: { id: eventId } }"
+        class="my-4"
+      >
+        <v-icon start icon="mdi-arrow-left"></v-icon>
+        Back to Event
+      </v-btn>
     </v-row>
 
-    <seatmap :selected-seats="selectedSeats" @select-seat="selectSeat" />
+    <div class="d-flex justify-start">
+      <v-chip class="ma-2" color="accent" label>
+        <v-icon start icon="mdi-calendar-range"></v-icon>
+        {{ formatShowingDateTime(timeSlot.datetime) }}
+      </v-chip>
+      <v-chip class="ma-2" color="primary" label>
+        <v-icon start icon="mdi-cash-multiple"></v-icon>
+        {{ formatPrice(timeSlot.event?.price) }}
+      </v-chip>
+      <v-chip class="ma-2" color="green" label>
+        <v-icon start icon="mdi-seat"></v-icon>
+        {{ standardSeatsLeft }} standard seats left
+      </v-chip>
+      <v-chip class="ma-2" color="blue" label>
+        <v-icon start icon="mdi-wheelchair-accessibility"></v-icon>
+        {{ wheelchairSeatsLeft }} wheelchair seats left
+      </v-chip>
+    </div>
+    <v-card-title class="pl-0 text-h4 font-weight-bold">{{
+      timeSlot.event?.name
+    }}</v-card-title>
+    <p class="text-body-1">{{ timeSlot.event?.description }}</p>
+
+    <v-divider class="my-4"></v-divider>
+
+    <seatmap
+      :selected-seats="selectedSeats"
+      @select-seat="selectSeat"
+      :reserved-tickets="timeSlot.tickets"
+    />
 
     <v-divider class="my-4"></v-divider>
 
