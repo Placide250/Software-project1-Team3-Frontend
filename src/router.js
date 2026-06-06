@@ -9,9 +9,9 @@ const router = createRouter({
       component: () => import("./views/Login.vue"),
     },
     {
-      path: "/recipes",
-      name: "recipes",
-      component: () => import("./views/RecipeList.vue"),
+      path: "/register",
+      name: "register",
+      component: () => import("./views/Register.vue"),
     },
     {
       path: "/CreateEvent",
@@ -23,6 +23,14 @@ const router = createRouter({
       name: "editRecipe",
       props: true,
       component: () => import("./views/EditRecipe.vue"),
+      path: "/events",
+      name: "events",
+      component: () => import("./views/EventList.vue"),
+    },
+    {
+      path: "/events/:id",
+      name: "eventDetails",
+      component: () => import("./views/EventDetails.vue"),
     },
     {
       path: "/ingredients",
