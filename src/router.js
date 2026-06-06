@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import("./views/RecipeList.vue"),
     },
     {
+      path: "/CreateEvent",
+      name: "createEvent",
+      component: () => import("./views/CreateEvent.vue"),
+    },
+    {
       path: "/recipe/:id",
       name: "editRecipe",
       props: true,
