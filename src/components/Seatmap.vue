@@ -13,11 +13,11 @@ function seatId(row, seat) {
 }
 
 function isSelected(row, seat) {
-  return props.selectedSeats.includes(seatId(row, seat));
+  return props.selectedSeats.some((s) => s.seat === seatId(row, seat));
 }
 
-function handleSeatClick(row, seat) {
-  emit("select-seat", seatId(row, seat));
+function handleSeatClick(row, seat, isWheelchair) {
+  emit("select-seat", seatId(row, seat), isWheelchair);
 }
 
 /*
@@ -47,6 +47,7 @@ const SEATS = [
 <template>
   <v-card class="rounded-lg elevation-5">
     <v-card-title class="headline text-center">Front</v-card-title>
+    <v-divider></v-divider>
     <v-card-text class="body-1">
       <div
         v-for="row in SEATS"
@@ -60,7 +61,7 @@ const SEATS = [
             label
             style="width: 50px; cursor: pointer"
             class="ma-1 d-flex justify-center align-center"
-            @click="handleSeatClick(row.row, 0)"
+            @click="handleSeatClick(row.row, 0, true)"
           >
             <v-icon start icon="mdi-wheelchair-accessibility"></v-icon>
             0
@@ -73,7 +74,7 @@ const SEATS = [
             label
             style="width: 45px; cursor: pointer"
             class="ma-1 d-flex justify-center align-center"
-            @click="handleSeatClick(row.row, seat)"
+            @click="handleSeatClick(row.row, seat, false)"
           >
             {{ seatId(row.row, seat) }}
           </v-chip>
@@ -89,7 +90,7 @@ const SEATS = [
             label
             style="width: 50px; cursor: pointer"
             class="ma-1 d-flex justify-center align-center"
-            @click="handleSeatClick(row.row, row.seats.length + 1)"
+            @click="handleSeatClick(row.row, row.seats.length + 1, true)"
           >
             <v-icon start icon="mdi-wheelchair-accessibility"></v-icon>
             {{ row.seats.length + 1 }}
@@ -97,6 +98,7 @@ const SEATS = [
         </div>
       </div>
     </v-card-text>
+    <v-divider></v-divider>
     <v-card-title class="headline text-center">Back</v-card-title>
   </v-card>
 </template>

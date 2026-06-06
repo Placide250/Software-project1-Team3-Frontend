@@ -1,19 +1,37 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Seatmap from "../components/Seatmap.vue";
-import EventServices from "../services/EventServices.js";
+import OrderSummary from "../components/OrderSummary.vue";
 import formatPrice from "../utils/formatPrice.js";
 import { formatShowingDateTime } from "../utils/formatDatesAndTimes.js";
 import TimeSlotServices from "../services/TimeSlotServices.js";
 
 const route = useRoute();
 const router = useRouter();
+
+const savedData = route.query.data ? JSON.parse(route.query.data) : {}; // so users can come back to this page and edit their order
+
 const eventId = route.params.eventId;
 const slotId = route.params.slotId;
 const timeSlot = ref({});
 
-const selectedSeats = ref([]);
+const selectedSeats = ref(savedData.selectedSeats ?? []);
+const childCount = ref(savedData.childCount ?? 0);
+const guestEmail = ref(savedData.guestEmail ?? "");
+
+// update the query string when the data changes (the one that feeds into savedData)
+watchEffect(() => {
+  router.replace({
+    query: {
+      data: JSON.stringify({
+        selectedSeats: selectedSeats.value,
+        childCount: childCount.value,
+        guestEmail: guestEmail.value,
+      }),
+    },
+  });
+});
 
 const snackbar = ref({
   value: false,
@@ -32,19 +50,18 @@ async function getTimeSlot() {
     })
     .catch((error) => {
       console.log(error);
+      snackbar.value.value = true;
+      snackbar.value.color = "error";
+      snackbar.value.text = error.response.data.message;
     });
 }
 
-function selectSeat(seat) {
-  if (selectedSeats.value.includes(seat)) {
-    selectedSeats.value = selectedSeats.value.filter((s) => s !== seat);
+function selectSeat(seat, isWheelchair) {
+  if (selectedSeats.value.some((s) => s.seat === seat)) {
+    selectedSeats.value = selectedSeats.value.filter((s) => s.seat !== seat);
   } else {
-    selectedSeats.value.push(seat);
+    selectedSeats.value.push({ isWheelchair, seat });
   }
-}
-
-function navigateToEventDetails() {
-  router.push({ name: "eventDetails", params: { id: eventId } });
 }
 
 function closeSnackBar() {
@@ -56,7 +73,7 @@ function closeSnackBar() {
     <v-btn
       variant="flat"
       color="secondary"
-      @click="navigateToEventDetails()"
+      :to="{ name: 'eventDetails', params: { id: eventId } }"
       class="my-4"
     >
       <v-icon start icon="mdi-arrow-left"></v-icon>
@@ -84,39 +101,12 @@ function closeSnackBar() {
 
     <seatmap :selected-seats="selectedSeats" @select-seat="selectSeat" />
 
-    <v-card class="rounded-lg elevation-5 mt-8">
-      <v-card-title
-        ><v-row align="center">
-          <v-col cols="10"
-            ><v-card-title class="headline">Time Slots</v-card-title>
-          </v-col>
-        </v-row>
-      </v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col>
-            <v-text-field label="Name" required></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field label="Price" type="number"></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-textarea label="Description"></v-textarea>
-          </v-col>
-        </v-row>
-      </v-card-text>
-      <v-card-actions class="pt-0">
-        <v-btn variant="flat" color="secondary">
-          <v-icon start icon="mdi-delete"></v-icon>
-          Delete Event
-        </v-btn>
-        TODO: Cancellations
-        <v-spacer></v-spacer>
-        <v-btn variant="flat" color="primary"> Update Event</v-btn>
-      </v-card-actions>
-    </v-card>
+    <order-summary
+      v-model:child-count="childCount"
+      v-model:guest-email="guestEmail"
+      :selected-seats="selectedSeats"
+      :time-slot="timeSlot"
+    />
 
     <v-snackbar v-model="snackbar.value" rounded="pill">
       {{ snackbar.text }}

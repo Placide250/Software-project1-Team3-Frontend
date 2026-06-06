@@ -29,6 +29,11 @@ const router = createRouter({
       component: () => import("./views/TimeSlotDetails.vue"),
     },
     {
+      path: "/events/:eventId/time-slots/:slotId/checkout",
+      name: "timeSlotCheckout",
+      component: () => import("./views/TimeSlotCheckout.vue"),
+    },
+    {
       path: "/admin/events",
       name: "adminEvents",
       component: () => import("./views/Admin/AdminEventList.vue"),

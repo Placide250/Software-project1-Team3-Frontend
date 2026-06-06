@@ -268,7 +268,7 @@ function closeSnackBar() {
               <v-icon start icon="mdi-delete"></v-icon>
               Delete Event
             </v-btn>
-            TODO: Cancellations
+            TODO: Cancellations, Logos
             <v-spacer></v-spacer>
             <v-btn variant="flat" color="primary" @click="updateEvent()"
               >Update Event</v-btn
@@ -295,6 +295,7 @@ function closeSnackBar() {
               </v-col>
             </v-row>
           </v-card-title>
+          <v-divider></v-divider>
           <v-card-text>
             <v-table class="mt-4">
               <thead>
