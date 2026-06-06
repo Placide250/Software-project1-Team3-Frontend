@@ -106,7 +106,6 @@ const canCheckout = computed(() => {
               prepend-inner-icon="mdi-account"
               class="mb-3"
               hide-details
-              :disabled="selectedPaymentMethod !== 'credit-card'"
             ></v-text-field>
           </v-row>
           <v-row>
@@ -120,7 +119,6 @@ const canCheckout = computed(() => {
               class="mb-3"
               hide-details
               :rules="CARD_NUMBER_RULES"
-              :disabled="selectedPaymentMethod !== 'credit-card'"
             ></v-text-field>
           </v-row>
           <v-row>
@@ -135,7 +133,6 @@ const canCheckout = computed(() => {
                 class="mb-3"
                 hide-details
                 :rules="SECURITY_CODE_RULES"
-                :disabled="selectedPaymentMethod !== 'credit-card'"
               ></v-text-field>
             </v-col>
             <v-col cols="6" style="padding: 0px; padding-left: 8px">
@@ -149,7 +146,6 @@ const canCheckout = computed(() => {
                 class="mb-3"
                 hide-details
                 :rules="CARD_EXPIRATION_RULES"
-                :disabled="selectedPaymentMethod !== 'credit-card'"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -164,7 +160,15 @@ const canCheckout = computed(() => {
         prepend-icon="mdi-lock"
         :disabled="!canCheckout"
         class="w-100"
-        @click="emit('checkout')"
+        @click="
+          emit('checkout', {
+            paymentMethod: selectedPaymentMethod,
+            cardName: cardName,
+            cardNumber: cardNumber,
+            cardExpiration: cardExpiration,
+            cardSecurityCode: cardSecurityCode,
+          })
+        "
       >
         Place Order
       </v-btn>

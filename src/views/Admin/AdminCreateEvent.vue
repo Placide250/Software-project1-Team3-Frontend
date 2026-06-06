@@ -46,7 +46,6 @@ async function createEvent() {
       snackbar.value.color = "error";
       snackbar.value.text = error.response.data.message;
     });
-  await getEvent();
 }
 
 function closeSnackBar() {

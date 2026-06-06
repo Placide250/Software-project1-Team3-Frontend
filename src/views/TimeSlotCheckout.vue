@@ -7,6 +7,7 @@ import { formatShowingDateTime } from "../utils/formatDatesAndTimes.js";
 import TimeSlotServices from "../services/TimeSlotServices.js";
 import OrderSummary from "../components/OrderSummary.vue";
 import PaymentForm from "../components/PaymentForm.vue";
+import OrderServices from "../services/OrderServices.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -79,10 +80,40 @@ function selectSeat(seat, isWheelchair) {
   }
 }
 
-function checkout() {
-  snackbar.value.value = true;
-  snackbar.value.color = "green";
-  snackbar.value.text = "TODO: Implement Checkout";
+async function checkout(paymentData) {
+  const data = {
+    selectedSeats: selectedSeats.value,
+    childCount: childCount.value,
+    guestEmail: guestEmail.value,
+    paymentMethod: paymentData.paymentMethod,
+    paymentToken:
+      paymentData.paymentMethod === "credit-card"
+        ? null
+        : Math.random().toString(36).substring(2), // random string to simulate 3rd party payment token
+    cardName: paymentData.cardName,
+    cardNumber: paymentData.cardNumber,
+    expirationMonth: paymentData.cardExpiration.substring(0, 2),
+    expirationYear: paymentData.cardExpiration.substring(3, 5),
+    cardSecurityCode: paymentData.cardSecurityCode,
+  };
+
+  await OrderServices.addOrder(eventId, slotId, data)
+    .then((res) => {
+      console.log(res);
+      snackbar.value.value = true;
+      snackbar.value.color = "green";
+      snackbar.value.text = `Order created successfully!`;
+      router.push({
+        name: "orderDetails",
+        params: { id: res.data.order.id },
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      snackbar.value.value = true;
+      snackbar.value.color = "error";
+      snackbar.value.text = error.response.data.message;
+    });
 }
 
 function closeSnackBar() {

@@ -36,7 +36,16 @@ const router = createRouter({
       name: "timeSlotCheckout",
       component: () => import("./views/TimeSlotCheckout.vue"),
     },
-
+    {
+      path: "/orders",
+      name: "orders",
+      component: () => import("./views/OrderList.vue"),
+    },
+    {
+      path: "/orders/:id",
+      name: "orderDetails",
+      component: () => import("./views/OrderDetails.vue"),
+    },
     // ADMIN
     {
       path: "/admin/events",
