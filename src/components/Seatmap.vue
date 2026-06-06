@@ -67,11 +67,11 @@ const SEATS = [
               color="blue"
               :variant="isSelected(row.row, 0) ? 'elevated' : 'outlined'"
               label
-              style="width: 50px; cursor: pointer"
+              style="width: 60px; cursor: pointer"
               class="ma-1 d-flex justify-center align-center"
             >
               <v-icon start icon="mdi-wheelchair-accessibility"></v-icon>
-              0
+              {{ row.row }}0
             </v-chip>
           </div>
           <div v-for="seat in row.seats" :key="seat">
@@ -94,11 +94,11 @@ const SEATS = [
                   : 'outlined'
               "
               label
-              style="width: 50px; cursor: pointer"
+              style="width: 60px; cursor: pointer"
               class="ma-1 d-flex justify-center align-center"
             >
               <v-icon start icon="mdi-wheelchair-accessibility"></v-icon>
-              {{ row.seats.length + 1 }}
+              {{ row.row }}{{ row.seats.length + 1 }}
             </v-chip>
           </div>
         </div>
@@ -130,12 +130,12 @@ const SEATS = [
             color="blue"
             :variant="isSelected(row.row, 0) ? 'elevated' : 'outlined'"
             label
-            style="width: 50px; cursor: pointer"
+            style="width: 60px; cursor: pointer"
             class="ma-1 d-flex justify-center align-center"
             @click="handleSeatClick(row.row, 0, true)"
           >
             <v-icon start icon="mdi-wheelchair-accessibility"></v-icon>
-            0
+            {{ row.row }}0
           </v-chip>
         </div>
         <div v-for="seat in row.seats" :key="seat">
@@ -159,12 +159,12 @@ const SEATS = [
                 : 'outlined'
             "
             label
-            style="width: 50px; cursor: pointer"
+            style="width: 60px; cursor: pointer"
             class="ma-1 d-flex justify-center align-center"
             @click="handleSeatClick(row.row, row.seats.length + 1, true)"
           >
             <v-icon start icon="mdi-wheelchair-accessibility"></v-icon>
-            {{ row.seats.length + 1 }}
+            {{ row.row }}{{ row.seats.length + 1 }}
           </v-chip>
         </div>
       </div>

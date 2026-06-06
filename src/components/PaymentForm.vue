@@ -88,7 +88,7 @@ const canCheckout = computed(() => {
           </v-btn>
         </v-col>
       </v-row>
-      <div v-if="selectedPaymentMethod === 'credit-card'">
+      <div v-if="selectedPaymentMethod === 'credit_card'">
         <v-divider class="my-4"></v-divider>
         <p class="text-subtitle-2 font-weight-bold text-center">
           Card Checkout

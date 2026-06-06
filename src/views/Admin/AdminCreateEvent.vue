@@ -1,8 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import IngredientServices from "../../services/IngredientServices.js";
-import RecipeIngredientServices from "../../services/RecipeIngredientServices.js";
 import TimeSlotServices from "../../services/TimeSlotServices.js";
 import EventServices from "../../services/EventServices.js";
 import {

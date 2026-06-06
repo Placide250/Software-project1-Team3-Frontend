@@ -20,16 +20,11 @@ const user = ref({
 
 onMounted(async () => {
   localStorage.removeItem("user");
-  // if (localStorage.getItem("user") !== null) {
-  //   router.push({ name: "recipes" });
-  // }
 });
 
 function navigateToEvents() {
   router.push({ name: "events" });
 }
-
-
 
 async function login() {
   await UserServices.loginUser(user)
@@ -51,7 +46,6 @@ async function login() {
 function openCreateAccount() {
   router.push({ name: "register" });
 }
-
 
 function closeSnackBar() {
   snackbar.value.value = false;
@@ -99,8 +93,6 @@ function closeSnackBar() {
           </v-btn>
         </v-card-title>
       </v-card>
-
-      
 
       <v-snackbar v-model="snackbar.value" rounded="pill">
         {{ snackbar.text }}
