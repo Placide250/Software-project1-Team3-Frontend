@@ -44,16 +44,19 @@ function logout() {
       <v-toolbar-title class="title">
         {{ title }}
       </v-toolbar-title>
-      <v-btn v-if="!!user" class="mx-2" :to="{ name: 'adminEvents' }">
+      <v-btn v-if="user?.isAdmin" class="mx-2" :to="{ name: 'adminEvents' }">
         <v-icon icon="mdi-calendar-edit" class="mr-1"></v-icon>
         Manage Events
       </v-btn>
-      <v-btn v-if="!!user" class="mx-2" :to="{ name: 'adminOrders' }">
+      <v-btn v-if="user?.isAdmin" class="mx-2" :to="{ name: 'adminOrders' }">
         <v-icon icon="mdi-ticket" class="mr-1"></v-icon>
         Manage Orders
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn class="mx-2" :to="{ name: 'events' }"> Events </v-btn>
+      <v-btn v-if="!!user" class="mx-2" :to="{ name: 'orders' }">
+        My Orders
+      </v-btn>
+      <v-btn class="mx-2" :to="{ name: 'events' }">Browse Events</v-btn>
       <v-btn v-if="user === null" class="mx-2" :to="{ name: 'login' }">
         Login
       </v-btn>
