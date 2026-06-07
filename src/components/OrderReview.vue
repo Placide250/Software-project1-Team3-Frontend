@@ -16,6 +16,12 @@ const props = defineProps({
   },
 });
 
+const snackbar = ref({
+  value: false,
+  color: "",
+  text: "",
+});
+
 const previewSeatmapOpen = ref(false);
 
 const slot = computed(() => props.order?.tickets?.[0]?.slot ?? {});
@@ -29,6 +35,20 @@ const paymentMethod = computed(() =>
 );
 const childCount = computed(() => props.order?.childCount ?? 0);
 const adultCount = computed(() => tickets.value.length - childCount.value);
+
+const qrDialogTicket = ref(null);
+const qrDialogOpen = computed(() => !!qrDialogTicket.value);
+
+function refund() {
+  console.log("TODO: Refund");
+  snackbar.value.value = true;
+  snackbar.value.color = "green";
+  snackbar.value.text = "TODO: Refunds";
+}
+
+function closeSnackBar() {
+  snackbar.value.value = false;
+}
 </script>
 
 <template>
@@ -48,7 +68,10 @@ const adultCount = computed(() => tickets.value.length - childCount.value);
           class="ma-1"
           color="accent"
           label
-          :to="{ name: 'adminEditEvent', params: { id: event.id } }"
+          :to="{
+            name: showCustomer ? 'adminEditEvent' : 'eventDetails',
+            params: { id: event.id },
+          }"
         >
           <v-icon start icon="mdi-calendar-star"></v-icon>
           {{ event.name }}
@@ -58,7 +81,7 @@ const adultCount = computed(() => tickets.value.length - childCount.value);
           color="primary"
           label
           :to="{
-            name: 'adminManageTimeSlot',
+            name: showCustomer ? 'adminManageTimeSlot' : 'timeSlotDetails',
             params: { eventId: event.id, slotId: slot.id },
           }"
         >
@@ -161,7 +184,7 @@ const adultCount = computed(() => tickets.value.length - childCount.value);
     </v-card-text>
     <v-card-actions class="pa-4 pt-0">
       <v-spacer></v-spacer>
-      <v-btn variant="flat" color="primary" @click="close()">{{
+      <v-btn variant="flat" color="primary" @click="refund()">{{
         showCustomer ? "Refund Order" : "Request Refund"
       }}</v-btn>
     </v-card-actions>
@@ -174,6 +197,114 @@ const adultCount = computed(() => tickets.value.length - childCount.value);
       </v-card-title>
     </div>
     <v-divider></v-divider>
-    <v-card-text class="pa-4"> </v-card-text>
+    <v-card-text class="pa-4">
+      <v-row>
+        <v-col v-for="t in tickets" :key="t.seat" cols="12" sm="6">
+          <div class="d-flex h-100 border rounded">
+            <div
+              class="pa-3 flex-grow-1 d-flex flex-column justify-space-between"
+            >
+              <div>
+                <p class="text-caption text-medium-emphasis mb-1">
+                  {{ event.name }}
+                </p>
+                <p class="text-caption text-medium-emphasis mb-2">
+                  <v-icon
+                    size="12"
+                    icon="mdi-calendar-range"
+                    class="mr-1"
+                  ></v-icon>
+                  {{ formatShowingDateTime(slot.datetime) }}
+                </p>
+              </div>
+              <div>
+                <p class="font-weight-bold mb-1 text-h6">
+                  {{ t.seat }}
+                </p>
+                <div class="d-flex align-center gap-1">
+                  <span class="text-caption text-medium-emphasis">
+                    {{ formatPrice(t.archivedPrice) }}
+                  </span>
+                  <v-chip
+                    v-if="t.isWheelchair"
+                    color="blue"
+                    size="x-small"
+                    label
+                    variant="tonal"
+                    class="ml-1"
+                  >
+                    <v-icon
+                      start
+                      size="10"
+                      icon="mdi-wheelchair-accessibility"
+                    ></v-icon>
+                    Wheelchair
+                  </v-chip>
+                </div>
+              </div>
+            </div>
+
+            <v-divider
+              vertical
+              class="border-dashed border-opacity-50"
+            ></v-divider>
+
+            <div
+              class="d-flex align-center justify-center pa-2 cursor-pointer"
+              style="width: 88px"
+              @click="qrDialogTicket = t"
+            >
+              <div
+                class="d-flex flex-column align-center justify-center rounded bg-grey-lighten-4"
+                style="width: 72px; height: 72px"
+              >
+                <v-icon
+                  size="36"
+                  color="grey-lighten-1"
+                  icon="mdi-qrcode"
+                ></v-icon>
+                <span
+                  class="text-caption text-medium-emphasis text-grey-lighten-3"
+                  >Expand</span
+                >
+              </div>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+    </v-card-text>
   </v-card>
+
+  <v-dialog v-model="qrDialogOpen" max-width="320">
+    <v-card v-if="qrDialogOpen" class="pa-4 text-center">
+      <v-card-title class="text-h6 font-weight-bold">
+        Seat {{ qrDialogTicket.seat }}
+      </v-card-title>
+      <v-card-subtitle>{{ event.name }}</v-card-subtitle>
+      <v-card-text class="d-flex justify-center pa-4">
+        <div
+          class="d-flex flex-column align-center justify-center rounded"
+          style="width: 240px; height: 240px; background: #f5f5f5"
+        >
+          <v-icon size="120" color="grey-lighten-1" icon="mdi-qrcode"></v-icon>
+          <p class="text-caption text-medium-emphasis mt-2">
+            TODO: Wire up QR Codes
+          </p>
+        </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn variant="text" @click="qrDialogTicket = null">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-snackbar v-model="snackbar.value" rounded="pill">
+    {{ snackbar.text }}
+    <template v-slot:actions>
+      <v-btn :color="snackbar.color" variant="text" @click="closeSnackBar()">
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>

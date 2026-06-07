@@ -70,7 +70,7 @@ function closeSnackBar() {
                     color="primary"
                     variant="tonal"
                     :to="{
-                      name: 'adminEditEvent',
+                      name: 'eventDetails',
                       params: { id: order.tickets[0].slot.event?.id },
                     }"
                     >{{ order.tickets[0].slot.event?.name }}</v-chip
@@ -81,7 +81,7 @@ function closeSnackBar() {
                     color="primary"
                     variant="tonal"
                     :to="{
-                      name: 'adminManageTimeSlot',
+                      name: 'timeSlotDetails',
                       params: {
                         eventId: order.tickets[0].slot.event?.id,
                         slotId: order.tickets[0].slot.id,
