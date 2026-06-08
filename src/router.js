@@ -43,6 +43,11 @@ const router = createRouter({
       name: "ingredients",
       component: () => import("./views/IngredientList.vue"),
     },
+    {
+      path: "/qr-test",
+      name: "QRTest",
+      component: () => import("@/views/QRTest.vue"),  // lazy load like the rest
+    },
   ],
 });
 
