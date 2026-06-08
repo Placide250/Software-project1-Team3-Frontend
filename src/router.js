@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // AUTHENTICATION
     {
       path: "/",
       name: "login",
@@ -13,6 +14,8 @@ const router = createRouter({
       name: "register",
       component: () => import("./views/Register.vue"),
     },
+
+    // PUBLIC ROUTES
     {
       path: "/events",
       name: "events",
@@ -23,6 +26,27 @@ const router = createRouter({
       name: "eventDetails",
       component: () => import("./views/EventDetails.vue"),
     },
+    {
+      path: "/events/:eventId/time-slots/:slotId",
+      name: "timeSlotDetails",
+      component: () => import("./views/TimeSlotDetails.vue"),
+    },
+    {
+      path: "/events/:eventId/time-slots/:slotId/checkout",
+      name: "timeSlotCheckout",
+      component: () => import("./views/TimeSlotCheckout.vue"),
+    },
+    {
+      path: "/orders",
+      name: "orders",
+      component: () => import("./views/OrderList.vue"),
+    },
+    {
+      path: "/orders/:id",
+      name: "orderDetails",
+      component: () => import("./views/OrderDetails.vue"),
+    },
+    // ADMIN
     {
       path: "/admin/events",
       name: "adminEvents",
@@ -37,11 +61,6 @@ const router = createRouter({
       path: "/admin/events/:id",
       name: "adminEditEvent",
       component: () => import("./views/Admin/AdminEditEvent.vue"),
-    },
-    {
-      path: "/ingredients",
-      name: "ingredients",
-      component: () => import("./views/IngredientList.vue"),
     },
   ],
 });

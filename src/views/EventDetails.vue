@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import EventServices from "../services/EventServices.js";
 import formatPrice from "../utils/formatPrice.js";
 import {
@@ -9,6 +9,7 @@ import {
 } from "../utils/formatDatesAndTimes.js";
 
 const route = useRoute();
+const router = useRouter();
 const eventId = route.params.id;
 const event = ref({});
 const snackbar = ref({
@@ -16,6 +17,24 @@ const snackbar = ref({
   color: "",
   text: "",
 });
+
+const standardSeatsLeft = (slot) => {
+  const STARTING_STANDARD_TICKETS = 75;
+  if (!slot?.tickets) return STARTING_STANDARD_TICKETS;
+  return (
+    STARTING_STANDARD_TICKETS -
+    slot?.tickets.filter((t) => !t.isWheelchair).length
+  );
+};
+
+const wheelchairSeatsLeft = (slot) => {
+  const STARTING_WHEELCHAIR_TICKETS = 2;
+  if (!slot?.tickets) return STARTING_WHEELCHAIR_TICKETS;
+  return (
+    STARTING_WHEELCHAIR_TICKETS -
+    slot?.tickets.filter((t) => t.isWheelchair).length
+  );
+};
 
 onMounted(async () => {
   await getEvent();
@@ -32,12 +51,10 @@ async function getEvent() {
 }
 
 function buyTicket(slot) {
-  // TODO: implement this guy
-  snackbar.value = {
-    value: true,
-    color: "success",
-    text: `TODO: IMPLEMENT THIS`,
-  };
+  router.push({
+    name: "timeSlotDetails",
+    params: { eventId: eventId, slotId: slot.id },
+  });
 }
 
 function closeSnackBar() {
@@ -70,6 +87,8 @@ function closeSnackBar() {
         <tr>
           <th class="text-left">Date</th>
           <th class="text-left">Time</th>
+          <th class="text-left">Standard Seats Left</th>
+          <th class="text-left">Wheelchair Seats Left</th>
           <th class="text-left">Tickets</th>
         </tr>
       </thead>
@@ -81,6 +100,8 @@ function closeSnackBar() {
           <td>
             {{ formatShowingTime(slot.datetime) }}
           </td>
+          <td>{{ standardSeatsLeft(slot) }}</td>
+          <td>{{ wheelchairSeatsLeft(slot) }}</td>
           <td>
             <v-btn color="primary" @click="buyTicket(slot)">
               <v-icon start icon="mdi-ticket"></v-icon>

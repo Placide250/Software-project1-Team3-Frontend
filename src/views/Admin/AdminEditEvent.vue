@@ -1,8 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import IngredientServices from "../../services/IngredientServices.js";
-import RecipeIngredientServices from "../../services/RecipeIngredientServices.js";
 import TimeSlotServices from "../../services/TimeSlotServices.js";
 import EventServices from "../../services/EventServices.js";
 import {
@@ -52,6 +50,24 @@ const TIME_OPTIONS = [
   "10:00 PM",
   "11:00 PM",
 ];
+
+const standardSeatsLeft = (slot) => {
+  const STARTING_STANDARD_TICKETS = 75;
+  if (!slot?.tickets) return STARTING_STANDARD_TICKETS;
+  return (
+    STARTING_STANDARD_TICKETS -
+    slot?.tickets.filter((t) => !t.isWheelchair).length
+  );
+};
+
+const wheelchairSeatsLeft = (slot) => {
+  const STARTING_WHEELCHAIR_TICKETS = 2;
+  if (!slot?.tickets) return STARTING_WHEELCHAIR_TICKETS;
+  return (
+    STARTING_WHEELCHAIR_TICKETS -
+    slot?.tickets.filter((t) => t.isWheelchair).length
+  );
+};
 
 const snackbar = ref({
   value: false,
@@ -268,7 +284,7 @@ function closeSnackBar() {
               <v-icon start icon="mdi-delete"></v-icon>
               Delete Event
             </v-btn>
-            TODO: Cancellations
+            TODO: Cancellations, Logos
             <v-spacer></v-spacer>
             <v-btn variant="flat" color="primary" @click="updateEvent()"
               >Update Event</v-btn
@@ -295,12 +311,15 @@ function closeSnackBar() {
               </v-col>
             </v-row>
           </v-card-title>
+          <v-divider></v-divider>
           <v-card-text>
             <v-table class="mt-4">
               <thead>
                 <tr>
                   <th class="text-left">Date</th>
                   <th class="text-left">Time</th>
+                  <th class="text-left">Standard Seats Left</th>
+                  <th class="text-left">Wheelchair Seats Left</th>
                   <th class="text-left justify-end d-flex">Actions</th>
                 </tr>
               </thead>
@@ -312,6 +331,8 @@ function closeSnackBar() {
                   <td>
                     {{ formatShowingTime(slot.datetime) }}
                   </td>
+                  <td>{{ standardSeatsLeft(slot) }}</td>
+                  <td>{{ wheelchairSeatsLeft(slot) }}</td>
                   <td class="justify-end d-flex align-center">
                     <v-btn color="primary" @click="openEditTimeSlot(slot)">
                       <v-icon start icon="mdi-pencil"></v-icon>

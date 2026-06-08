@@ -41,3 +41,14 @@ export function formatShowingTime(datetime) {
     minute: "2-digit",
   });
 }
+
+export function formatShowingDateTime(datetime) {
+  return new Date(datetime).toLocaleString("en-US", {
+    timeZone: "UTC",
+    hour: "numeric",
+    minute: "2-digit",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
