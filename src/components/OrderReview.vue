@@ -275,7 +275,7 @@ function closeSnackBar() {
     </v-card-text>
   </v-card>
 
-  <v-dialog v-model="qrDialogOpen" max-width="320">
+  <v-dialog v-model="qrDialogOpen" max-width="400">
     <v-card v-if="qrDialogOpen" class="pa-4 text-center">
       <v-card-title class="text-h6 font-weight-bold">
         Seat {{ qrDialogTicket.seat }}
@@ -283,8 +283,8 @@ function closeSnackBar() {
       <v-card-subtitle>{{ event.name }}</v-card-subtitle>
       <v-card-text class="d-flex justify-center pa-4">
         <div
-          class="d-flex flex-column align-center justify-center rounded"
-          style="width: 240px; height: 240px; background: #f5f5f5"
+          class="d-flex flex-column align-center justify-center rounded bg-grey-lighten-4"
+          style="width: 240px; height: 240px"
         >
           <v-icon size="120" color="grey-lighten-1" icon="mdi-qrcode"></v-icon>
           <p class="text-caption text-medium-emphasis mt-2">
