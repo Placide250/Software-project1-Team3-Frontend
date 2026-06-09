@@ -87,13 +87,13 @@ async function updateTimeSlot() {
   await getTimeSlot();
 }
 
-async function deleteTimeSlot(editTimeSlotId) {
-  await TimeSlotServices.deleteSlot(editTimeSlotId)
+async function deleteTimeSlot() {
+  await TimeSlotServices.deleteSlot(timeSlot.value.id)
     .then(() => {
       snackbar.value.value = true;
       snackbar.value.color = "green";
       snackbar.value.text = `Time slot deleted successfully!`;
-      router.push({ name: "eventDetails", params: { id: eventId } });
+      router.push({ name: "adminEditEvent", params: { id: eventId } });
     })
     .catch((error) => {
       console.log(error);
@@ -101,7 +101,6 @@ async function deleteTimeSlot(editTimeSlotId) {
       snackbar.value.color = "error";
       snackbar.value.text = error.response.data.message;
     });
-  await getEvent();
 }
 
 function closeSnackBar() {

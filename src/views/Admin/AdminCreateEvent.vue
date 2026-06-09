@@ -92,6 +92,7 @@ function closeSnackBar() {
             </v-row>
           </v-card-text>
           <v-card-actions class="pt-0">
+            TODO: Logo Upload
             <v-spacer></v-spacer>
             <v-btn variant="flat" color="primary" @click="createEvent()"
               >Create Event</v-btn
