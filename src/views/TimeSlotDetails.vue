@@ -6,6 +6,10 @@ import OrderSummary from "../components/OrderSummary.vue";
 import formatPrice from "../utils/formatPrice.js";
 import { formatShowingDateTime } from "../utils/formatDatesAndTimes.js";
 import TimeSlotServices from "../services/TimeSlotServices.js";
+import {
+  STARTING_STANDARD_TICKETS,
+  STARTING_WHEELCHAIR_TICKETS,
+} from "../config/constants.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -34,7 +38,6 @@ watchEffect(() => {
 });
 
 const standardSeatsLeft = computed(() => {
-  const STARTING_STANDARD_TICKETS = 75;
   if (!timeSlot?.value?.tickets) return STARTING_STANDARD_TICKETS;
   return (
     STARTING_STANDARD_TICKETS -
@@ -43,7 +46,6 @@ const standardSeatsLeft = computed(() => {
 });
 
 const wheelchairSeatsLeft = computed(() => {
-  const STARTING_WHEELCHAIR_TICKETS = 2;
   if (!timeSlot?.value?.tickets) return STARTING_WHEELCHAIR_TICKETS;
   return (
     STARTING_WHEELCHAIR_TICKETS -

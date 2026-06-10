@@ -45,7 +45,8 @@ function logout() {
         {{ title }}
       </v-toolbar-title>
       <v-btn v-if="!!user" class="mx-2" :to="{ name: 'adminEvents' }">
-        Admin Events
+        <v-icon icon="mdi-calendar-edit" class="mr-1"></v-icon>
+        Manage Events
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn class="mx-2" :to="{ name: 'events' }"> Events </v-btn>

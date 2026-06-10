@@ -10,6 +10,12 @@ import {
   toLocalDateString,
   to24Hour,
 } from "../../utils/formatDatesAndTimes.js";
+import {
+  FREQUENCY_OPTIONS,
+  STARTING_STANDARD_TICKETS,
+  STARTING_WHEELCHAIR_TICKETS,
+  TIME_OPTIONS,
+} from "../../config/constants.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -31,28 +37,7 @@ const editTimeSlotId = ref(null);
 const editTimeSlotDate = ref(null);
 const editTimeSlotTime = ref(null);
 
-const FREQUENCY_OPTIONS = ["Daily", "Weekly", "Biweekly", "Monthly"];
-
-const TIME_OPTIONS = [
-  "9:00 AM",
-  "10:00 AM",
-  "11:00 AM",
-  "12:00 PM",
-  "1:00 PM",
-  "2:00 PM",
-  "3:00 PM",
-  "4:00 PM",
-  "5:00 PM",
-  "6:00 PM",
-  "7:00 PM",
-  "8:00 PM",
-  "9:00 PM",
-  "10:00 PM",
-  "11:00 PM",
-];
-
 const standardSeatsLeft = (slot) => {
-  const STARTING_STANDARD_TICKETS = 75;
   if (!slot?.tickets) return STARTING_STANDARD_TICKETS;
   return (
     STARTING_STANDARD_TICKETS -
@@ -61,7 +46,6 @@ const standardSeatsLeft = (slot) => {
 };
 
 const wheelchairSeatsLeft = (slot) => {
-  const STARTING_WHEELCHAIR_TICKETS = 2;
   if (!slot?.tickets) return STARTING_WHEELCHAIR_TICKETS;
   return (
     STARTING_WHEELCHAIR_TICKETS -
@@ -164,45 +148,6 @@ async function addRecurringTimeSlot() {
   await getEvent();
 }
 
-async function updateTimeSlot() {
-  const datetime = buildDatetime(
-    editTimeSlotDate.value,
-    editTimeSlotTime.value,
-  );
-
-  await TimeSlotServices.updateSlot(editTimeSlotId.value, { datetime })
-    .then(() => {
-      snackbar.value.value = true;
-      snackbar.value.color = "green";
-      snackbar.value.text = `Time slot updated successfully!`;
-      timeSlotEditModalOpen.value = false;
-    })
-    .catch((error) => {
-      console.log(error);
-      snackbar.value.value = true;
-      snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
-    });
-  await getEvent();
-}
-
-async function deleteTimeSlot(editTimeSlotId) {
-  await TimeSlotServices.deleteSlot(editTimeSlotId)
-    .then(() => {
-      snackbar.value.value = true;
-      snackbar.value.color = "green";
-      snackbar.value.text = `Time slot deleted successfully!`;
-      timeSlotEditModalOpen.value = false;
-    })
-    .catch((error) => {
-      console.log(error);
-      snackbar.value.value = true;
-      snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
-    });
-  await getEvent();
-}
-
 function openAddTimeSlot() {
   newTimeSlotDate.value = null;
   newTimeSlotTime.value = null;
@@ -230,10 +175,6 @@ function closeAddTimeSlotModal() {
 
 function closeAddTimeSlotRecurringModal() {
   timeSlotRecurringAddModalOpen.value = false;
-}
-
-function closeEditTimeSlotModal() {
-  timeSlotEditModalOpen.value = false;
 }
 
 function closeSnackBar() {
@@ -320,7 +261,9 @@ function closeSnackBar() {
                   <th class="text-left">Time</th>
                   <th class="text-left">Standard Seats Left</th>
                   <th class="text-left">Wheelchair Seats Left</th>
-                  <th class="text-left justify-end d-flex">Actions</th>
+                  <th class="text-left justify-end d-flex align-center">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -334,9 +277,15 @@ function closeSnackBar() {
                   <td>{{ standardSeatsLeft(slot) }}</td>
                   <td>{{ wheelchairSeatsLeft(slot) }}</td>
                   <td class="justify-end d-flex align-center">
-                    <v-btn color="primary" @click="openEditTimeSlot(slot)">
+                    <v-btn
+                      color="primary"
+                      :to="{
+                        name: 'adminManageTimeSlot',
+                        params: { eventId: event.id, slotId: slot.id },
+                      }"
+                    >
                       <v-icon start icon="mdi-pencil"></v-icon>
-                      Edit
+                      Manage
                     </v-btn>
                   </td>
                 </tr>
@@ -437,53 +386,6 @@ function closeSnackBar() {
           >
           <v-btn variant="flat" color="primary" @click="addRecurringTimeSlot()"
             >Add Time Slots</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog persistent :model-value="timeSlotEditModalOpen" width="800">
-      <v-card class="rounded-lg elevation-5">
-        <v-card-title class="headline mb-2">Edit Time Slot</v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col>
-              <v-date-input
-                v-model="editTimeSlotDate"
-                label="Date"
-                required
-              ></v-date-input>
-            </v-col>
-
-            <v-col>
-              <v-select
-                v-model="editTimeSlotTime"
-                :items="TIME_OPTIONS"
-                label="Time"
-                required
-              ></v-select>
-            </v-col>
-          </v-row>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-            variant="flat"
-            color="secondary"
-            @click="deleteTimeSlot(editTimeSlotId)"
-          >
-            <v-icon start icon="mdi-delete"></v-icon>
-            Delete Slot</v-btn
-          >
-          TODO: Cancellations
-          <v-spacer></v-spacer>
-          <v-btn
-            variant="flat"
-            color="secondary"
-            @click="closeEditTimeSlotModal()"
-            >Close</v-btn
-          >
-          <v-btn variant="flat" color="primary" @click="updateTimeSlot()"
-            >Update Time Slot</v-btn
           >
         </v-card-actions>
       </v-card>
