@@ -46,6 +46,7 @@ const router = createRouter({
       name: "orderDetails",
       component: () => import("./views/OrderDetails.vue"),
     },
+
     // ADMIN
     {
       path: "/admin/events",
@@ -62,10 +63,15 @@ const router = createRouter({
       name: "adminEditEvent",
       component: () => import("./views/Admin/AdminEditEvent.vue"),
     },
+    // {
+    //   path: "/qr-test",
+    //   name: "QRTest",
+    //   component: () => import("@/views/QRTest.vue"),  // lazy load like the rest
+    // },
     {
-      path: "/qr-test",
-      name: "QRTest",
-      component: () => import("@/views/QRTest.vue"),  // lazy load like the rest
+      path: "/admin/events/:eventId/time-slots/:slotId",
+      name: "adminManageTimeSlot",
+      component: () => import("./views/Admin/AdminManageTimeSlot.vue"),
     },
   ],
 });

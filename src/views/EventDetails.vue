@@ -7,6 +7,10 @@ import {
   formatShowingDate,
   formatShowingTime,
 } from "../utils/formatDatesAndTimes.js";
+import {
+  STARTING_STANDARD_TICKETS,
+  STARTING_WHEELCHAIR_TICKETS,
+} from "../config/constants.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -19,7 +23,6 @@ const snackbar = ref({
 });
 
 const standardSeatsLeft = (slot) => {
-  const STARTING_STANDARD_TICKETS = 75;
   if (!slot?.tickets) return STARTING_STANDARD_TICKETS;
   return (
     STARTING_STANDARD_TICKETS -
@@ -28,7 +31,6 @@ const standardSeatsLeft = (slot) => {
 };
 
 const wheelchairSeatsLeft = (slot) => {
-  const STARTING_WHEELCHAIR_TICKETS = 2;
   if (!slot?.tickets) return STARTING_WHEELCHAIR_TICKETS;
   return (
     STARTING_WHEELCHAIR_TICKETS -
