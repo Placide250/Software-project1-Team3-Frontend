@@ -1,8 +1,9 @@
 import axios from "axios";
 
-var baseurl = "";
+let baseurl = "";
+
 if (process.env.NODE_ENV === "development") {
-  baseurl = "http://localhost/planetapi/";
+  baseurl = "http://localhost:3200/planetapi/";
 } else {
   baseurl = "/planetapi/";
 }
@@ -13,7 +14,7 @@ const apiClient = axios.create({
     Accept: "application/json",
     "Content-Type": "application/json",
     "X-Requested-With": "XMLHttpRequest",
-    "Access-Control-Allow-Origin": "*",
+    // "Access-Control-Allow-Origin": "*",
     crossDomain: true,
   },
   transformRequest: (data, headers) => {

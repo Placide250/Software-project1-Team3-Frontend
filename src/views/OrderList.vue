@@ -1,10 +1,10 @@
 <script setup>
 import { onMounted } from "vue";
 import { ref } from "vue";
-import EventCard from "../components/EventCardComponent.vue";
-import EventServices from "../services/EventServices.js";
+// import EventCard from "../components/EventCardComponent.vue";
+// import EventServices from "../services/EventServices.js";
 
-const events = ref([]);
+const orders = ref([]);
 const user = ref(null);
 const snackbar = ref({
   value: false,
@@ -13,22 +13,22 @@ const snackbar = ref({
 });
 
 onMounted(async () => {
-  await getEvents();
+  // await getEvents();
   user.value = JSON.parse(localStorage.getItem("user"));
 });
 
-async function getEvents() {
-  await EventServices.getEvents()
-    .then((response) => {
-      events.value = response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-      snackbar.value.value = true;
-      snackbar.value.color = "error";
-      snackbar.value.text = error.message;
-    });
-}
+// async function getEvents() {
+//   await EventServices.getEvents()
+//     .then((response) => {
+//       events.value = response.data;
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       snackbar.value.value = true;
+//       snackbar.value.color = "error";
+//       snackbar.value.text = error.message;
+//     });
+// }
 
 function closeSnackBar() {
   snackbar.value.value = false;
@@ -41,17 +41,17 @@ function closeSnackBar() {
       <v-row align="center" class="mb-4">
         <v-col cols="10"
           ><v-card-title class="pl-0 text-h4 font-weight-bold"
-            >Events
+            >Your Orders (TODO)
           </v-card-title>
         </v-col>
       </v-row>
 
-      <EventCard
+      <!-- <EventCard
         v-for="event in events"
         :key="event.id"
         :event="event"
         @deletedEvent="getEvents()"
-      />
+      /> -->
 
       <v-snackbar v-model="snackbar.value" rounded="pill">
         {{ snackbar.text }}
