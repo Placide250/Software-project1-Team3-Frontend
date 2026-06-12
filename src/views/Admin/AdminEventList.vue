@@ -1,10 +1,11 @@
 <script setup>
 import { onMounted } from "vue";
 import { ref } from "vue";
-import EventCard from "../components/EventCardComponent.vue";
-import EventServices from "../services/EventServices.js";
+import EventCard from "../../components/EventCardComponent.vue";
+import EventServices from "../../services/EventServices.js";
 
 const events = ref([]);
+const isAdd = ref(false);
 const user = ref(null);
 const snackbar = ref({
   value: false,
@@ -30,6 +31,14 @@ async function getEvents() {
     });
 }
 
+function openAdd() {
+  isAdd.value = true;
+}
+
+function closeAdd() {
+  isAdd.value = false;
+}
+
 function closeSnackBar() {
   snackbar.value.value = false;
 }
@@ -41,8 +50,14 @@ function closeSnackBar() {
       <v-row align="center" class="mb-4">
         <v-col cols="10"
           ><v-card-title class="pl-0 text-h4 font-weight-bold"
-            >Events
+            >Admin - Events
           </v-card-title>
+        </v-col>
+        <v-col class="d-flex justify-end" cols="2">
+          <v-btn color="accent" class="me-2" :to="{ name: 'adminCreateEvent' }">
+            <v-icon start icon="mdi-plus"></v-icon>
+            New Event</v-btn
+          >
         </v-col>
       </v-row>
 
@@ -50,6 +65,7 @@ function closeSnackBar() {
         v-for="event in events"
         :key="event.id"
         :event="event"
+        :isAdmin="true"
         @deletedEvent="getEvents()"
       />
 
