@@ -49,5 +49,15 @@ function navigateToEventDetails() {
     <v-card-text class="body-1">
       {{ event.description }}
     </v-card-text>
+    <v-card-actions @click.stop>
+      <v-spacer></v-spacer>
+      <v-btn
+        variant="flat"
+        color="primary"
+        @click.stop="router.push({ name: 'waitlist', params: { eventId: event.id } })"
+      >
+        Join Waitlist
+      </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
