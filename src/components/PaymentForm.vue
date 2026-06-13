@@ -1,15 +1,10 @@
 <script setup>
 import { computed, ref } from "vue";
+import { PAYMENT_METHODS } from "../config/constants";
 
 const emit = defineEmits(["checkout"]);
 
 const selectedPaymentMethod = ref(null);
-const paymentMethods = [
-  { key: "credit_card", label: "Credit Card", icon: "mdi-credit-card-outline" },
-  { key: "paypal", label: "Paypal", icon: "mdi-alpha-p-box-outline" },
-  { key: "apple_pay", label: "Apple Pay", icon: "mdi-apple" },
-  { key: "google_pay", label: "Google Pay", icon: "mdi-google" },
-];
 const cardName = ref("");
 const cardNumber = ref("");
 const cardExpiration = ref("");
@@ -66,9 +61,9 @@ const canCheckout = computed(() => {
       </p>
       <v-row dense>
         <v-col
-          v-for="method in paymentMethods"
+          v-for="method in PAYMENT_METHODS"
           :key="method.key"
-          :cols="12 / paymentMethods.length"
+          :cols="12 / PAYMENT_METHODS.length"
         >
           <v-btn
             block

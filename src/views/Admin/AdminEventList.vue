@@ -5,7 +5,6 @@ import EventCard from "../../components/EventCardComponent.vue";
 import EventServices from "../../services/EventServices.js";
 
 const events = ref([]);
-const isAdd = ref(false);
 const user = ref(null);
 const snackbar = ref({
   value: false,
@@ -29,14 +28,6 @@ async function getEvents() {
       snackbar.value.color = "error";
       snackbar.value.text = error.message;
     });
-}
-
-function openAdd() {
-  isAdd.value = true;
-}
-
-function closeAdd() {
-  isAdd.value = false;
 }
 
 function closeSnackBar() {
