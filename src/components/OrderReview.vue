@@ -4,6 +4,11 @@ import Seatmap from "./Seatmap.vue";
 import formatPrice from "../utils/formatPrice.js";
 import { formatShowingDateTime } from "../utils/formatDatesAndTimes.js";
 import { PAYMENT_METHODS } from "../config/constants.js";
+import { useQRCode } from "@vueuse/integrations/useQRCode";
+import { useRoute } from "vue-router";
+
+const url = window.location.href;
+const domain = new URL(url).host;
 
 const props = defineProps({
   order: {
@@ -26,7 +31,13 @@ const previewSeatmapOpen = ref(false);
 
 const slot = computed(() => props.order?.tickets?.[0]?.slot ?? {});
 const event = computed(() => slot.value?.event ?? {});
-const tickets = computed(() => props.order?.tickets ?? []);
+const tickets = computed(
+  () =>
+    props.order?.tickets.map((t) => ({
+      ...t,
+      qrCode: useQRCode(`https://${domain}/tickets/${t.id}/redeem`),
+    })) ?? [],
+);
 const selectedSeats = computed(() =>
   tickets.value.map((t) => ({ seat: t.seat, isWheelchair: t.isWheelchair })),
 );
@@ -255,14 +266,10 @@ function closeSnackBar() {
               @click="qrDialogTicket = t"
             >
               <div
-                class="d-flex flex-column align-center justify-center rounded bg-grey-lighten-4"
+                class="d-flex flex-column align-center justify-center rounded"
                 style="width: 72px; height: 72px"
               >
-                <v-icon
-                  size="36"
-                  color="grey-lighten-1"
-                  icon="mdi-qrcode"
-                ></v-icon>
+                <img :src="t.qrCode.value" alt="QR Code" style="width: 56px" />
                 <span
                   class="text-caption text-medium-emphasis text-grey-lighten-3"
                   >Expand</span
@@ -282,15 +289,7 @@ function closeSnackBar() {
       </v-card-title>
       <v-card-subtitle>{{ event.name }}</v-card-subtitle>
       <v-card-text class="d-flex justify-center pa-4">
-        <div
-          class="d-flex flex-column align-center justify-center rounded bg-grey-lighten-4"
-          style="width: 240px; height: 240px"
-        >
-          <v-icon size="120" color="grey-lighten-1" icon="mdi-qrcode"></v-icon>
-          <p class="text-caption text-medium-emphasis mt-2">
-            TODO: Wire up QR Codes
-          </p>
-        </div>
+        <img :src="qrDialogTicket.qrCode" alt="QR Code" style="width: 360px" />
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
