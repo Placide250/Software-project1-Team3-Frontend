@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import EventServices from "../services/EventServices.js";
 import formatPrice from "../utils/formatPrice.js";
+import { isFutureSlot } from "../utils/dateFilters.js";
 import {
   formatShowingDate,
   formatShowingTime,
@@ -79,7 +80,7 @@ function closeSnackBar() {
         </v-chip>
         <v-chip class="ma-2" color="accent" label>
           <v-icon start icon="mdi-calendar-month"></v-icon>
-          {{ event.slots?.length }} showings
+          {{event.slots?.filter(isFutureSlot).length}}
         </v-chip>
       </v-col>
     </v-row>
@@ -95,7 +96,10 @@ function closeSnackBar() {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="slot in event.slots" :key="slot.id">
+        <tr
+          v-for="slot in event.slots?.filter(isFutureSlot)"
+          :key="slot.id"
+        >
           <td>
             {{ formatShowingDate(slot.datetime) }}
           </td>

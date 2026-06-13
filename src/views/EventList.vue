@@ -20,7 +20,11 @@ onMounted(async () => {
 async function getEvents() {
   await EventServices.getEvents()
     .then((response) => {
-      events.value = response.data;
+      events.value = response.data.filter((event) =>
+        event.slots?.some(
+          (slot) => new Date(slot.datetime) >= new Date()
+        )
+      );
     })
     .catch((error) => {
       console.log(error);
