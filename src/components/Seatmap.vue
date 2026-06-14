@@ -8,6 +8,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  ownedTickets: {
+    type: Array,
+    default: () => [],
+  },
   previewOnly: { type: Boolean, default: false },
   isOpen: { type: Boolean, default: false },
 });
@@ -19,7 +23,11 @@ function seatId(row, seat) {
 }
 
 function isReserved(row, seat) {
-  return props.reservedTickets.some((s) => s.seat === seatId(row, seat));
+  return props.reservedTickets.some(
+    (s) =>
+      s.seat === seatId(row, seat) &&
+      props.ownedTickets.every((t) => t.seat !== seatId(row, seat)),
+  );
 }
 
 function isSelected(row, seat) {

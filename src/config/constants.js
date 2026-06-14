@@ -20,3 +20,10 @@ export const FREQUENCY_OPTIONS = ["Daily", "Weekly", "Biweekly", "Monthly"];
 
 export const STARTING_STANDARD_TICKETS = 75;
 export const STARTING_WHEELCHAIR_TICKETS = 2;
+
+export const PAYMENT_METHODS = [
+  { key: "credit_card", label: "Credit Card", icon: "mdi-credit-card" },
+  { key: "paypal", label: "Paypal", icon: "mdi-alpha-p-box-outline" },
+  { key: "apple_pay", label: "Apple Pay", icon: "mdi-apple" },
+  { key: "google_pay", label: "Google Pay", icon: "mdi-google" },
+];

@@ -1,11 +1,11 @@
 <script setup>
-import { onMounted } from "vue";
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import EventCard from "../components/EventCardComponent.vue";
 import EventServices from "../services/EventServices.js";
 
 const events = ref([]);
 const user = ref(null);
+const showPastEvents = ref(false);
 const snackbar = ref({
   value: false,
   color: "",
@@ -20,11 +20,25 @@ onMounted(async () => {
 async function getEvents() {
   await EventServices.getEvents()
     .then((response) => {
-      events.value = response.data.filter((event) =>
-        event.slots?.some(
-          (slot) => new Date(slot.datetime) >= new Date()
-        )
-      );
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      user.value = storedUser;
+      console.log("USER:", storedUser);
+      console.log("IS ADMIN:", storedUser?.isAdmin);
+
+      const showPastEventsFromStorage =
+        localStorage.getItem("showPastEvents") === "true";
+
+      if (showPastEventsFromStorage) {
+        // ADMIN MODE → show ALL events
+        events.value = response.data;
+      } else {
+        // CUSTOMER MODE → only future events
+        events.value = response.data.filter((event) =>
+          event.slots?.some(
+            (slot) => new Date(slot.datetime) >= new Date()
+          )
+        );
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -33,6 +47,11 @@ async function getEvents() {
       snackbar.value.text = error.message;
     });
 }
+
+watch(showPastEvents, (newValue) => {
+  localStorage.setItem("showPastEvents", newValue);
+  getEvents(); 
+});
 
 function closeSnackBar() {
   snackbar.value.value = false;
@@ -47,6 +66,14 @@ function closeSnackBar() {
           ><v-card-title class="pl-0 text-h4 font-weight-bold"
             >Events
           </v-card-title>
+        </v-col>
+        <v-col cols="4" class="d-flex justify-end">
+          <v-switch
+            v-if="user?.isAdmin"
+            v-model="showPastEvents"
+            label="Show Past Events"
+            hide-details
+          ></v-switch>
         </v-col>
       </v-row>
 

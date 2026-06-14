@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import EventServices from "../services/EventServices.js";
 import formatPrice from "../utils/formatPrice.js";
@@ -21,6 +21,23 @@ const snackbar = ref({
   value: false,
   color: "",
   text: "",
+});
+
+const displayedSlots = computed(() => {
+  const showPastEvents =
+    localStorage.getItem("showPastEvents") === "true";
+
+  const slots = event.value.slots || [];
+
+  if (showPastEvents) {
+    return slots;
+  }
+
+  const now = new Date();
+
+  return slots.filter((slot) => {
+    return new Date(slot.datetime).getTime() >= now.getTime();
+  });
 });
 
 const standardSeatsLeft = (slot) => {
@@ -80,7 +97,7 @@ function closeSnackBar() {
         </v-chip>
         <v-chip class="ma-2" color="accent" label>
           <v-icon start icon="mdi-calendar-month"></v-icon>
-          {{event.slots?.filter(isFutureSlot).length}}
+          {{ displayedSlots.length }}
         </v-chip>
       </v-col>
     </v-row>
@@ -97,7 +114,7 @@ function closeSnackBar() {
       </thead>
       <tbody>
         <tr
-          v-for="slot in event.slots?.filter(isFutureSlot)"
+          v-for="slot in displayedSlots"
           :key="slot.id"
         >
           <td>
