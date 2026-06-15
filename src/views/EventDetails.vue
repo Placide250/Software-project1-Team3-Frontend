@@ -22,22 +22,22 @@ const snackbar = ref({
   color: "",
   text: "",
 });
+const showPastEvents = ref(
+  localStorage.getItem("showPastEvents") === "true"
+);
+
 
 const displayedSlots = computed(() => {
-  const showPastEvents =
-    localStorage.getItem("showPastEvents") === "true";
 
   const slots = event.value.slots || [];
 
-  if (showPastEvents) {
+  if (showPastEvents.value) {
     return slots;
   }
 
   const now = new Date();
 
-  return slots.filter((slot) => {
-    return new Date(slot.datetime).getTime() >= now.getTime();
-  });
+  return slots.filter((slot) => isFutureSlot(slot));
 });
 
 const standardSeatsLeft = (slot) => {
@@ -64,6 +64,13 @@ async function getEvent() {
   await EventServices.getEvent(eventId)
     .then((response) => {
       event.value = response.data[0];
+      console.log("FIRST SLOT DATETIME:", event.value.slots?.[0]?.datetime);
+      console.log(
+        "JS DATE INTERPRETATION:",
+        new Date(event.value.slots?.[0]?.datetime)
+      );
+      console.log("LOCAL NOW:", new Date().toString());
+      console.log("UTC NOW:", new Date().toUTCString());
     })
     .catch((error) => {
       console.log(error);

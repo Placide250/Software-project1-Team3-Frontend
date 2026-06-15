@@ -1,15 +1,29 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import EventCard from "../components/EventCardComponent.vue";
 import EventServices from "../services/EventServices.js";
 
 const events = ref([]);
 const user = ref(null);
-const showPastEvents = ref(false);
+const showPastEvents = ref(
+  localStorage.getItem("showPastEvents") === "true"
+);
 const snackbar = ref({
   value: false,
   color: "",
   text: "",
+});
+
+const displayedEvents = computed(() => {
+  if (showPastEvents.value) {
+    return events.value;
+  }
+
+  return events.value.filter((event) =>
+    event.slots?.some(
+      (slot) => new Date(slot.datetime).getTime() >= Date.now()
+    )
+  );
 });
 
 onMounted(async () => {
@@ -25,20 +39,7 @@ async function getEvents() {
       console.log("USER:", storedUser);
       console.log("IS ADMIN:", storedUser?.isAdmin);
 
-      const showPastEventsFromStorage =
-        localStorage.getItem("showPastEvents") === "true";
-
-      if (showPastEventsFromStorage) {
-        // ADMIN MODE → show ALL events
-        events.value = response.data;
-      } else {
-        // CUSTOMER MODE → only future events
-        events.value = response.data.filter((event) =>
-          event.slots?.some(
-            (slot) => new Date(slot.datetime) >= new Date()
-          )
-        );
-      }
+      events.value = response.data;
     })
     .catch((error) => {
       console.log(error);
@@ -49,8 +50,7 @@ async function getEvents() {
 }
 
 watch(showPastEvents, (newValue) => {
-  localStorage.setItem("showPastEvents", newValue);
-  getEvents(); 
+  localStorage.setItem("showPastEvents", newValue); 
 });
 
 function closeSnackBar() {
@@ -78,7 +78,7 @@ function closeSnackBar() {
       </v-row>
 
       <EventCard
-        v-for="event in events"
+        v-for="event in displayedEvents"
         :key="event.id"
         :event="event"
         @deletedEvent="getEvents()"
