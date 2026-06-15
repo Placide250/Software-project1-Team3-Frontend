@@ -1,15 +1,29 @@
 <script setup>
-import { onMounted } from "vue";
-import { ref } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import EventCard from "../components/EventCardComponent.vue";
 import EventServices from "../services/EventServices.js";
 
 const events = ref([]);
 const user = ref(null);
+const showPastEvents = ref(
+  localStorage.getItem("showPastEvents") === "true"
+);
 const snackbar = ref({
   value: false,
   color: "",
   text: "",
+});
+
+const displayedEvents = computed(() => {
+  if (showPastEvents.value) {
+    return events.value;
+  }
+
+  return events.value.filter((event) =>
+    event.slots?.some(
+      (slot) => new Date(slot.datetime).getTime() >= Date.now()
+    )
+  );
 });
 
 onMounted(async () => {
@@ -20,6 +34,11 @@ onMounted(async () => {
 async function getEvents() {
   await EventServices.getEvents()
     .then((response) => {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      user.value = storedUser;
+      console.log("USER:", storedUser);
+      console.log("IS ADMIN:", storedUser?.isAdmin);
+
       events.value = response.data;
     })
     .catch((error) => {
@@ -29,6 +48,10 @@ async function getEvents() {
       snackbar.value.text = error.message;
     });
 }
+
+watch(showPastEvents, (newValue) => {
+  localStorage.setItem("showPastEvents", newValue); 
+});
 
 function closeSnackBar() {
   snackbar.value.value = false;
@@ -44,10 +67,18 @@ function closeSnackBar() {
             >Events
           </v-card-title>
         </v-col>
+        <v-col cols="4" class="d-flex justify-end">
+          <v-switch
+            v-if="user?.isAdmin"
+            v-model="showPastEvents"
+            label="Show Past Events"
+            hide-details
+          ></v-switch>
+        </v-col>
       </v-row>
 
       <EventCard
-        v-for="event in events"
+        v-for="event in displayedEvents"
         :key="event.id"
         :event="event"
         @deletedEvent="getEvents()"
