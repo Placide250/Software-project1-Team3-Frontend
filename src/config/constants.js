@@ -18,8 +18,8 @@ export const TIME_OPTIONS = [
 
 export const FREQUENCY_OPTIONS = ["Daily", "Weekly", "Biweekly", "Monthly"];
 
-export const STARTING_STANDARD_TICKETS = 75;
-export const STARTING_WHEELCHAIR_TICKETS = 2;
+export const STARTING_STANDARD_TICKETS = 0;
+export const STARTING_WHEELCHAIR_TICKETS = 0;
 
 export const PAYMENT_METHODS = [
   { key: "credit_card", label: "Credit Card", icon: "mdi-credit-card" },

@@ -53,6 +53,9 @@ const wheelchairSeatsLeft = computed(() => {
   );
 });
 
+// true when standard seats are completely filled
+const isSoldOut = computed(() => standardSeatsLeft.value === 0);
+
 const snackbar = ref({
   value: false,
   color: "",
@@ -88,6 +91,7 @@ function closeSnackBar() {
   snackbar.value.value = false;
 }
 </script>
+
 <template>
   <v-container>
     <v-row class="d-flex justify-end">
@@ -111,19 +115,46 @@ function closeSnackBar() {
         <v-icon start icon="mdi-cash-multiple"></v-icon>
         {{ formatPrice(timeSlot.event?.price) }}
       </v-chip>
-      <v-chip class="ma-2" color="green" label>
+      <v-chip class="ma-2" :color="isSoldOut ? 'error' : 'green'" label>
         <v-icon start icon="mdi-seat"></v-icon>
-        {{ standardSeatsLeft }} standard seats left
+        {{ isSoldOut ? "Sold Out" : standardSeatsLeft + " standard seats left" }}
       </v-chip>
       <v-chip class="ma-2" color="blue" label>
         <v-icon start icon="mdi-wheelchair-accessibility"></v-icon>
         {{ wheelchairSeatsLeft }} wheelchair seats left
       </v-chip>
     </div>
+
     <v-card-title class="pl-0 text-h4 font-weight-bold">{{
       timeSlot.event?.name
     }}</v-card-title>
     <p class="text-body-1">{{ timeSlot.event?.description }}</p>
+
+    <!-- Only shows when standard seats = 0 -->
+    <v-card
+      v-if="isSoldOut"
+      class="rounded-lg elevation-3 my-4 pa-4"
+      color="error"
+      variant="tonal"
+    >
+      <v-row align="center">
+        <v-col cols="8">
+          <p class="text-body-1 font-weight-bold">This timeslot is sold out.</p>
+          <p class="text-body-2">
+            Join the waitlist and we will notify you if a spot opens up.
+          </p>
+        </v-col>
+        <v-col cols="4" class="d-flex justify-end">
+          <v-btn
+            variant="flat"
+            color="primary"
+            @click="router.push({ name: 'waitlist', params: { eventId: eventId } })"
+          >
+            Join Waitlist
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-card>
 
     <v-divider class="my-4"></v-divider>
 
