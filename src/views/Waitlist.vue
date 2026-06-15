@@ -93,16 +93,15 @@ function goBack() {
           <v-card-title class="pl-0 text-h4 font-weight-bold">
             Waitlist Registration
           </v-card-title>
-          
         </v-col>
         <v-col class="d-flex justify-end" cols="2">
-          <v-btn variant="outlined" color="secondary" @click="goBack()">
+          <v-btn variant="flat" color="secondary" @click="goBack()">
             Back
           </v-btn>
         </v-col>
       </v-row>
 
-      <p class="mb-6 text-body-1">
+      <p v-if="!isSubmitted" class="mb-6 text-body-1">
         This event is currently <strong>sold out</strong>. Join the waitlist and we will notify you if a spot opens up.
       </p>
 
