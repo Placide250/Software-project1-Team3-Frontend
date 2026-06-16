@@ -117,7 +117,6 @@ function closeSnackBar() {
       <thead>
         <tr>
           <th class="text-left">Event</th>
-          <th class="text-left">Details</th>
           <th class="text-left">Date</th>
           <th class="text-left">Time</th>
           <th class="text-left">Standard Seats Left</th>
@@ -127,10 +126,9 @@ function closeSnackBar() {
       </thead>
       <tbody>
         <tr v-for="slot in timeslots" :key="slot.id">
-          <td>{{ getEventName(slot.eventId)}}</td>
           <td>
             <v-btn color="primary" @click="viewEvent(slot)">
-              Details
+              {{ getEventName(slot.eventId)}}
             </v-btn>
           </td>
           <td>
