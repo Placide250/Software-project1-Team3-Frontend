@@ -1,8 +1,8 @@
 import apiClient from "./services";
 
 export default {
-  getWaitlistByEventId(eventId) {
-    return apiClient.get("waitlist/event/" + eventId);
+  getWaitlistBySlotId(slotId) {
+    return apiClient.get("waitlist/slot/" + slotId);
   },
 
   getWaitlistByUserId(userId) {
