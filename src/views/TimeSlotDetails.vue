@@ -148,7 +148,7 @@ function closeSnackBar() {
           <v-btn
             variant="flat"
             color="primary"
-            @click="router.push({ name: 'waitlist', params: { eventId: eventId } })"
+            @click="router.push({ name: 'waitlist', params: { slotId: slotId } })"
           >
             Join Waitlist
           </v-btn>

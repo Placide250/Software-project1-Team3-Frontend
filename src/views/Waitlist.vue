@@ -2,10 +2,10 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import WaitlistServices from "../services/WaitlistServices.js";
-import EventServices from "../services/EventServices.js";
+import TimeSlotServices from "../services/TimeSlotServices.js";
 
 const props = defineProps({
-  eventId: {
+  slotId: {
     type: String,
     required: true,
   },
@@ -13,7 +13,7 @@ const props = defineProps({
 
 const router = useRouter();
 const user = ref(null);
-const event = ref(null);
+const slot = ref(null);
 const isLoading = ref(false);
 const isSubmitted = ref(false);
 
@@ -40,9 +40,9 @@ onMounted(async () => {
   form.value.lastName = user.value.lastName || "";
   form.value.email = user.value.email || "";
 
-  await EventServices.getEvent(props.eventId)
+  await TimeSlotServices.getSlot(props.slotId)
     .then((response) => {
-      event.value = response.data;
+      slot.value = response.data[0];
     })
     .catch((error) => {
       console.log(error);
@@ -53,7 +53,7 @@ async function submitWaitlist() {
   isLoading.value = true;
   const entry = {
     userId: user.value.id,
-    eventId: props.eventId,
+    slotId: props.slotId,
     firstName: form.value.firstName,
     lastName: form.value.lastName,
     email: form.value.email,
@@ -93,6 +93,9 @@ function goBack() {
           <v-card-title class="pl-0 text-h4 font-weight-bold">
             Waitlist Registration
           </v-card-title>
+          <v-card-subtitle v-if="slot" class="pl-0">
+            {{ slot.event?.name }}
+          </v-card-subtitle>
         </v-col>
         <v-col class="d-flex justify-end" cols="2">
           <v-btn variant="flat" color="secondary" @click="goBack()">
@@ -102,7 +105,7 @@ function goBack() {
       </v-row>
 
       <p v-if="!isSubmitted" class="mb-6 text-body-1">
-        This event is currently <strong>sold out</strong>. Join the waitlist and we will notify you if a spot opens up.
+        This timeslot is currently <strong>sold out</strong>. Join the waitlist and we will notify you if a spot opens up.
       </p>
 
       <!-- Success state after submission -->
