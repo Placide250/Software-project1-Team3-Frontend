@@ -47,7 +47,7 @@ const router = createRouter({
       component: () => import("./views/OrderDetails.vue"),
     },
     {
-      path: "/waitlist/:eventId",
+      path: "/waitlist/:slotId",
       name: "waitlist",
       props: true,
       component: () => import("./views/Waitlist.vue"),
