@@ -1,8 +1,9 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import EventServices from "../services/EventServices.js";
 import formatPrice from "../utils/formatPrice.js";
+import { isFutureSlot } from "../utils/dateFilters.js";
 import {
   formatShowingDate,
   formatShowingTime,
@@ -20,6 +21,23 @@ const snackbar = ref({
   value: false,
   color: "",
   text: "",
+});
+const showPastEvents = ref(
+  localStorage.getItem("showPastEvents") === "true"
+);
+
+
+const displayedSlots = computed(() => {
+
+  const slots = event.value.slots || [];
+
+  if (showPastEvents.value) {
+    return slots;
+  }
+
+  const now = new Date();
+
+  return slots.filter((slot) => isFutureSlot(slot));
 });
 
 const standardSeatsLeft = (slot) => {
@@ -46,6 +64,13 @@ async function getEvent() {
   await EventServices.getEvent(eventId)
     .then((response) => {
       event.value = response.data[0];
+      console.log("FIRST SLOT DATETIME:", event.value.slots?.[0]?.datetime);
+      console.log(
+        "JS DATE INTERPRETATION:",
+        new Date(event.value.slots?.[0]?.datetime)
+      );
+      console.log("LOCAL NOW:", new Date().toString());
+      console.log("UTC NOW:", new Date().toUTCString());
     })
     .catch((error) => {
       console.log(error);
@@ -79,7 +104,7 @@ function closeSnackBar() {
         </v-chip>
         <v-chip class="ma-2" color="accent" label>
           <v-icon start icon="mdi-calendar-month"></v-icon>
-          {{ event.slots?.length }} showings
+          {{ displayedSlots.length }}
         </v-chip>
       </v-col>
     </v-row>
@@ -95,7 +120,10 @@ function closeSnackBar() {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="slot in event.slots" :key="slot.id">
+        <tr
+          v-for="slot in displayedSlots"
+          :key="slot.id"
+        >
           <td>
             {{ formatShowingDate(slot.datetime) }}
           </td>
