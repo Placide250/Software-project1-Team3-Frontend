@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import formatPrice from "../utils/formatPrice.js";
+import { isFutureSlot } from "../utils/dateFilters";
 
 const router = useRouter();
 const user = ref(null);
@@ -41,7 +42,9 @@ function navigateToEventDetails() {
           </v-chip>
           <v-chip class="ma-2" color="accent" label>
             <v-icon start icon="mdi-calendar-month"></v-icon>
-            {{ event.slots.length }} showings
+            {{
+              event.slots?.filter(isFutureSlot).length
+            }} showings
           </v-chip>
         </v-col>
       </v-row>

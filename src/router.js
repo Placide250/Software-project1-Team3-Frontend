@@ -74,6 +74,12 @@ const router = createRouter({
       component: () => import("./views/OrderDetails.vue"),
       beforeEnter: isLoggedIn,
     },
+    {
+      path: "/waitlist/:slotId",
+      name: "waitlist",
+      props: true,
+      component: () => import("./views/Waitlist.vue"),
+    },
 
     // ADMIN
     {
