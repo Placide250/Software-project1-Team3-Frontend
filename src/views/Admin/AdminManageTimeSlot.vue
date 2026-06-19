@@ -201,7 +201,7 @@ function closeSnackBar() {
         <v-table class="mt-4">
           <thead>
             <tr>
-              <th class="text-left">Email</th>
+              <th class="text-left">Customer</th>
               <th class="text-left">Seat</th>
               <th class="text-left">Type</th>
               <th class="text-left justify-end d-flex align-center">Actions</th>
@@ -210,18 +210,37 @@ function closeSnackBar() {
           <tbody>
             <tr v-for="ticket in timeSlot.tickets" :key="ticket.id">
               <td>
-                {{
-                  ticket?.order?.user
-                    ? ticket?.order?.user?.email
-                    : ticket.guestEmail
-                }}
+                <v-chip
+                  prepend-icon="mdi-account-circle"
+                  :color="ticket?.order?.user ? 'primary' : 'default'"
+                >
+                  {{
+                    ticket?.order?.user
+                      ? `${ticket?.order?.user?.firstName} ${ticket?.order?.user?.lastName} (${ticket?.order?.user?.email})`
+                      : ticket?.order?.guestEmail
+                  }}
+                </v-chip>
+                <v-chip
+                  v-if="!ticket?.order?.user"
+                  class="ml-2"
+                  color="warning"
+                  size="small"
+                >
+                  Guest
+                </v-chip>
               </td>
               <td>
                 {{ ticket.seat }}
               </td>
               <td>{{ ticket.isWheelchair ? "Wheelchair" : "Standard" }}</td>
               <td class="justify-end d-flex align-center">
-                <v-btn color="primary">
+                <v-btn
+                  color="primary"
+                  :to="{
+                    name: 'adminOrderDetails',
+                    params: { id: ticket.order.id },
+                  }"
+                >
                   <v-icon start icon="mdi-ticket"></v-icon>
                   View Order
                 </v-btn>

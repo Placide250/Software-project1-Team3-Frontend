@@ -46,6 +46,12 @@ const router = createRouter({
       name: "orderDetails",
       component: () => import("./views/OrderDetails.vue"),
     },
+    {
+      path: "/waitlist/:slotId",
+      name: "waitlist",
+      props: true,
+      component: () => import("./views/Waitlist.vue"),
+    },
 
     // ADMIN
     {
@@ -72,6 +78,16 @@ const router = createRouter({
       path: "/admin/events/:eventId/time-slots/:slotId",
       name: "adminManageTimeSlot",
       component: () => import("./views/Admin/AdminManageTimeSlot.vue"),
+    },
+    {
+      path: "/admin/orders",
+      name: "adminOrders",
+      component: () => import("./views/Admin/AdminOrderList.vue"),
+    },
+    {
+      path: "/admin/orders/:id",
+      name: "adminOrderDetails",
+      component: () => import("./views/Admin/AdminOrderDetails.vue"),
     },
   ],
 });
