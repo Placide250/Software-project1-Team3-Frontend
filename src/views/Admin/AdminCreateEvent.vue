@@ -13,6 +13,7 @@ import {
 
 const route = useRoute();
 const router = useRouter();
+const logoFile = ref(null);
 
 const event = ref({});
 
@@ -33,19 +34,29 @@ async function getEvent() {
 }
 
 async function createEvent() {
-  await EventServices.addEvent(event.value)
-    .then((data) => {
-      snackbar.value.value = true;
-      snackbar.value.color = "green";
-      snackbar.value.text = `${event.value.name} created successfully!`;
-      router.push({ name: "adminEditEvent", params: { id: data.data.id } });
-    })
-    .catch((error) => {
-      console.log(error);
-      snackbar.value.value = true;
-      snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+  try {
+    const response = await EventServices.addEvent(event.value);
+    const eventId = response.data.id;
+
+    // upload logo only if selected
+    if (logoFile.value) {
+      await EventServices.uploadLogo(eventId, logoFile.value);
+    }
+
+    snackbar.value.value = true;
+    snackbar.value.color = "green";
+    snackbar.value.text = `${event.value.name} created successfully!`;
+
+    router.push({
+      name: "adminEditEvent",
+      params: { id: eventId },
     });
+  } catch (error) {
+    console.log(error);
+    snackbar.value.value = true;
+    snackbar.value.color = "error";
+    snackbar.value.text = error.response?.data?.message;
+  }
 }
 
 function closeSnackBar() {
@@ -88,6 +99,16 @@ function closeSnackBar() {
                   v-model="event.description"
                   label="Description"
                 ></v-textarea>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-file-input
+                  v-model="logoFile"
+                  label="Event Logo"
+                  accept="image/*"
+                  prepend-icon="mdi-image"
+                />
               </v-col>
             </v-row>
           </v-card-text>

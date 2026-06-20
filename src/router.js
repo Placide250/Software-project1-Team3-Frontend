@@ -75,6 +75,11 @@ const router = createRouter({
       component: () => import("./views/Admin/AdminEditEvent.vue"),
     },
     {
+      path: "/qr-test",
+      name: "QRTest",
+      component: () => import("@/views/QRTest.vue"),  // lazy load like the rest
+    },
+    {
       path: "/admin/events/:eventId/time-slots/:slotId",
       name: "adminManageTimeSlot",
       component: () => import("./views/Admin/AdminManageTimeSlot.vue"),
