@@ -52,12 +52,16 @@ function logout() {
         <v-icon icon="mdi-ticket" class="mr-1"></v-icon>
         Manage Orders
       </v-btn>
+      <v-btn v-if="!!user" class="mx-2" :to="{ name: 'adminUsers' }">
+        <v-icon icon="mdi-account-group" class="mr-1"></v-icon>
+        Manage Users
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn v-if="!!user" class="mx-2" :to="{ name: 'orders' }">
         My Orders
       </v-btn>
       <v-btn class="mx-2" :to="{ name: 'schedule' }"> Schedule </v-btn>
-      <v-btn class="mx-2" :to="{ name: 'events' }">Browse Events</v-btn>
+      <v-btn class="mx-2" :to="{ name: 'events' }">All Events</v-btn>
       <v-btn v-if="user === null" class="mx-2" :to="{ name: 'login' }">
         Login
       </v-btn>

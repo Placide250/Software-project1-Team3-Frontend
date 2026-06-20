@@ -21,7 +21,7 @@ const router = createRouter({
       name: "events",
       component: () => import("./views/EventList.vue"),
     },
-        {
+    {
       path: "/schedule",
       name: "schedule",
       component: () => import("./views/Schedule.vue"),
@@ -77,7 +77,7 @@ const router = createRouter({
     {
       path: "/qr-test",
       name: "QRTest",
-      component: () => import("@/views/QRTest.vue"),  // lazy load like the rest
+      component: () => import("@/views/QRTest.vue"), // lazy load like the rest
     },
     {
       path: "/admin/events/:eventId/time-slots/:slotId",
@@ -93,6 +93,16 @@ const router = createRouter({
       path: "/admin/orders/:id",
       name: "adminOrderDetails",
       component: () => import("./views/Admin/AdminOrderDetails.vue"),
+    },
+    {
+      path: "/admin/users",
+      name: "adminUsers",
+      component: () => import("./views/Admin/AdminUserList.vue"),
+    },
+    {
+      path: "/admin/users/:id",
+      name: "adminEditUser",
+      component: () => import("./views/Admin/AdminEditUser.vue"),
     },
   ],
 });
