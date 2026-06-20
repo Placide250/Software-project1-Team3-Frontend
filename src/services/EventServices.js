@@ -1,4 +1,5 @@
 import apiClient from "./services";
+import fileClient from "./fileClient";
 
 export default {
   getEvents() {
@@ -16,4 +17,10 @@ export default {
   deleteEvent(eventId) {
     return apiClient.delete("events/" + eventId);
   },
+  uploadLogo(eventId, file) {
+    const formData = new FormData();
+    formData.append("logo", file);
+
+    return fileClient.post(`events/${eventId}/logo`, formData);
+  }
 };
