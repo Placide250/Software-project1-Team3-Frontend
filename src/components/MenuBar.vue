@@ -54,6 +54,7 @@ function logout() {
       </v-btn>
       <v-btn to="/orders">My Tickets</v-btn>
       <v-spacer></v-spacer>
+      <v-btn class="mx-2" :to="{ name: 'schedule' }"> Schedule </v-btn>
       <v-btn class="mx-2" :to="{ name: 'events' }"> Events </v-btn>
       <v-btn v-if="user === null" class="mx-2" :to="{ name: 'login' }">
         Login

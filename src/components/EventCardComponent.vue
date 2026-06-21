@@ -32,6 +32,21 @@ function navigateToEventDetails() {
 
 <template>
   <v-card class="rounded-lg elevation-5 mb-8" @click="navigateToEventDetails()">
+    <v-img
+      v-if="event.logo"
+      :src="`http://localhost:3200${event.logo}`"
+      height="180"
+      cover
+      class="rounded-t-lg"
+    />
+
+    <v-img
+      v-else
+      src="/default-event.jpg"
+      height="180"
+      cover
+      class="rounded-t-lg"
+    />
     <v-card-title class="headline">
       <v-row align="center">
         <v-col cols="10">

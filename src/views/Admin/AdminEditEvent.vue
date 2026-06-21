@@ -19,6 +19,7 @@ import {
 
 const route = useRoute();
 const router = useRouter();
+const logoFile = ref(null);
 
 const event = ref({});
 
@@ -75,7 +76,14 @@ async function getEvent() {
 
 async function updateEvent() {
   await EventServices.updateEvent(event.value.id, event.value)
-    .then(() => {
+    .then(async () => {
+
+      if (logoFile.value) {
+        await EventServices.uploadLogo(
+          event.value.id,
+          logoFile.value
+        );
+      }
       snackbar.value.value = true;
       snackbar.value.color = "green";
       snackbar.value.text = `${event.value.name} updated successfully!`;
@@ -218,6 +226,26 @@ function closeSnackBar() {
                   label="Description"
                 ></v-textarea>
               </v-col>
+            </v-row>
+            <v-row v-if="event.logo">
+              <v-col>
+                <v-img
+                  :src="`http://localhost:3200${event.logo}`"
+                  height="200"
+                  max-width="300"
+                  cover
+                />
+              </v-col>
+              <v-row>
+                <v-col>
+                  <v-file-input
+                    v-model="logoFile"
+                    label="Replace Event Logo"
+                    accept="image/*"
+                    prepend-icon="mdi-image"
+                  />
+                </v-col>
+              </v-row>
             </v-row>
           </v-card-text>
           <v-card-actions class="pt-0">
