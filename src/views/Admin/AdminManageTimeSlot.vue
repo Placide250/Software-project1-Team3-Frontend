@@ -175,7 +175,6 @@ function closeSnackBar() {
           <v-icon start icon="mdi-delete"></v-icon>
           Delete Slot</v-btn
         >
-        TODO: Cancellations, Notify of Time Change
         <v-spacer></v-spacer>
         <v-btn variant="flat" color="primary" @click="updateTimeSlot()"
           >Update Time Slot</v-btn
