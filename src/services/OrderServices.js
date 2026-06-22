@@ -4,14 +4,16 @@ export default {
   getOrders() {
     return apiClient.get("orders");
   },
+  getOrdersByUser(userId) {
+    return apiClient.get(`orders?userId=${userId}`);
+  },
   getOrder(id) {
     return apiClient.get("orders/" + id);
   },
   addOrder(eventId, slotId, order) {
-    // /events/:eventId/slots/slotId/orders
     return apiClient.post(`events/${eventId}/slots/${slotId}/orders`, order);
   },
-  deleteOrder(orderOd) {
-    return apiClient.delete("orders/" + orderId);
+  cancelOrder(orderId) {
+    return apiClient.put(`orders/${orderId}/cancel`);
   },
 };
