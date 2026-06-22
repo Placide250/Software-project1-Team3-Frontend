@@ -52,7 +52,7 @@ function logout() {
         <v-icon icon="mdi-ticket" class="mr-1"></v-icon>
         Manage Orders
       </v-btn>
-      <v-btn to="/orders">My Tickets</v-btn>
+      <v-btn v-if="!!user" to="/orders">My Tickets</v-btn>
       <v-spacer></v-spacer>
       <v-btn class="mx-2" :to="{ name: 'schedule' }"> Schedule </v-btn>
       <v-btn class="mx-2" :to="{ name: 'events' }"> Events </v-btn>
