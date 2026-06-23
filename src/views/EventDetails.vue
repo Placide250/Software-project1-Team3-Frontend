@@ -64,6 +64,8 @@ async function getEvent() {
   await EventServices.getEvent(eventId)
     .then((response) => {
       event.value = response.data[0];
+      console.log("EVENT:", event.value);
+      console.log("LOGO:", event.value.logo);
       console.log("FIRST SLOT DATETIME:", event.value.slots?.[0]?.datetime);
       console.log(
         "JS DATE INTERPRETATION:",
@@ -90,6 +92,16 @@ function closeSnackBar() {
 </script>
 <template>
   <v-container>
+    <v-row v-if="event.logo">
+      <v-col cols="12">
+        <v-img
+          :src="`http://localhost:3200${event.logo}`"
+          height="300"
+          cover
+          class="mb-4 rounded-lg"
+        />
+      </v-col>
+    </v-row>
     <v-row align="center">
       <v-col cols="8">
         <v-card-title class="pl-0 text-h4 font-weight-bold">{{

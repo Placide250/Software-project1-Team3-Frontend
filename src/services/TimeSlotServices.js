@@ -7,6 +7,9 @@ export default {
   getSlot(id) {
     return apiClient.get("slots/" + id);
   },
+  getSlotByDate(date) {
+    return apiClient.get("slots/day/" + date);
+  },
   getSlotsByEvent(eventId) {
     return apiClient.get("events/" + eventId + "/slots");
   },
