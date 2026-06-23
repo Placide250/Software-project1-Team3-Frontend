@@ -47,6 +47,11 @@ const router = createRouter({
       name: "events",
       component: () => import("./views/EventList.vue"),
     },
+        {
+      path: "/schedule",
+      name: "schedule",
+      component: () => import("./views/Schedule.vue"),
+    },
     {
       path: "/events/:id",
       name: "eventDetails",
@@ -99,6 +104,11 @@ const router = createRouter({
       name: "adminEditEvent",
       component: () => import("./views/Admin/AdminEditEvent.vue"),
       beforeEnter: isAdmin,
+    },
+    {
+      path: "/qr-test",
+      name: "QRTest",
+      component: () => import("@/views/QRTest.vue"),  // lazy load like the rest
     },
     {
       path: "/admin/events/:eventId/time-slots/:slotId",
