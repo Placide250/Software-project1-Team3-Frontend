@@ -6,8 +6,21 @@ import { PAYMENT_METHODS } from "../config/constants";
 import formatPrice from "../utils/formatPrice";
 import { formatShowingDateTime } from "../utils/formatDatesAndTimes";
 
+const props = defineProps({
+  userId: {
+    required: false,
+  },
+  username: {
+    required: false,
+  },
+  isAdmin: {
+    required: false,
+    default: false,
+  },
+});
+
+
 const orders = ref([]);
-const user = ref(null);
 const snackbar = ref({
   value: false,
   color: "",
@@ -16,12 +29,19 @@ const snackbar = ref({
 
 onMounted(async () => {
   await getUserOrders();
-  user.value = JSON.parse(localStorage.getItem("user"));
 });
 
 async function getUserOrders() {
-  await OrderServices.getOrdersByCurrentUser()
+  let promise = null;
+  if (!props.userId) {
+    promise = OrderServices.getOrdersByCurrentUser();
+  } else {
+    promise = OrderServices.getOrdersByUser(props.userId);
+  }
+
+  promise
     .then((response) => {
+      console.log(response);
       orders.value = response.data;
     })
     .catch((error) => {
@@ -44,7 +64,9 @@ function closeSnackBar() {
         <v-card-title
           ><v-row align="center">
             <v-col cols="10"
-              ><v-card-title class="headline">Your Orders</v-card-title>
+              ><v-card-title class="headline">{{
+                !!props.username ? `${props.username}'s Orders` : "Your Orders"
+              }}</v-card-title>
             </v-col>
           </v-row>
         </v-card-title>
@@ -110,12 +132,19 @@ function closeSnackBar() {
                 <td class="justify-end d-flex align-center">
                   <v-btn
                     color="primary"
-                    :to="{
-                      name: 'orderDetails',
-                      params: {
-                        id: order.id,
-                      },
-                    }"
+                    :to="
+                      props.isAdmin
+                        ? {
+                            name: 'adminOrderDetails',
+                            params: { id: order.id },
+                          }
+                        : {
+                            name: 'orderDetails',
+                            params: {
+                              id: order.id,
+                            },
+                          }
+                    "
                   >
                     <v-icon start icon="mdi-ticket"></v-icon>
                     View
