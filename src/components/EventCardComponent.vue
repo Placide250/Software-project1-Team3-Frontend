@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import formatPrice from "../utils/formatPrice.js";
+import { isFutureSlot } from "../utils/dateFilters";
 
 const router = useRouter();
 const user = ref(null);
@@ -31,6 +32,21 @@ function navigateToEventDetails() {
 
 <template>
   <v-card class="rounded-lg elevation-5 mb-8" @click="navigateToEventDetails()">
+    <v-img
+      v-if="event.logo"
+      :src="`http://localhost:3200${event.logo}`"
+      height="180"
+      cover
+      class="rounded-t-lg"
+    />
+
+    <v-img
+      v-else
+      src="/default-event.jpg"
+      height="180"
+      cover
+      class="rounded-t-lg"
+    />
     <v-card-title class="headline">
       <v-row align="center">
         <v-col cols="10">
@@ -41,7 +57,9 @@ function navigateToEventDetails() {
           </v-chip>
           <v-chip class="ma-2" color="accent" label>
             <v-icon start icon="mdi-calendar-month"></v-icon>
-            {{ event.slots.length }} showings
+            {{
+              event.slots?.filter(isFutureSlot).length
+            }} showings
           </v-chip>
         </v-col>
       </v-row>
